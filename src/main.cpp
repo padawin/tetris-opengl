@@ -11,6 +11,8 @@ const GLuint WINDOW_HEIGHT = 600;
 const GLuint GLVIEWPOINT_WIDTH = 800;
 const GLuint GLVIEWPOINT_HEIGHT = 600;
 
+void processInput(GLFWwindow *window);
+
 int main() {
 	// Init GLFW
 	glfwInit();
@@ -47,12 +49,19 @@ int main() {
 		glViewport(0, 0, GLVIEWPOINT_WIDTH, GLVIEWPOINT_HEIGHT);
 
 		while(!glfwWindowShouldClose(window)) {
-			glfwSwapBuffers(window);
 			glfwPollEvents();
+			processInput(window);
+			glfwSwapBuffers(window);
 		}
 	}
 
 	// Cleanup
 	glfwTerminate();
 	return 0;
+}
+
+void processInput(GLFWwindow *window) {
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+		glfwSetWindowShouldClose(window, true);
+	}
 }
