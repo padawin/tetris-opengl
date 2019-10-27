@@ -10,6 +10,8 @@
 GLFWwindow *_window;
 
 void _initGLFW();
+bool _createWindow(int window_width, int window_height, const char* title, bool fullscreen);
+bool _initGLAD();
 void processInput();
 
 void _initGLFW() {
@@ -23,9 +25,7 @@ void _initGLFW() {
 	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 }
 
-bool renderer_init(int window_width, int window_height, const char* title, bool fullscreen) {
-	_initGLFW();
-
+bool _createWindow(int window_width, int window_height, const char* title, bool fullscreen) {
 	GLFWmonitor* monitor = NULL;
 	if (fullscreen) {
 		monitor = glfwGetPrimaryMonitor();
@@ -38,15 +38,23 @@ bool renderer_init(int window_width, int window_height, const char* title, bool 
 		std::cerr << "Failed to create GLFW window: " << strerror(errno) << std::endl;
 		return false;
 	}
-	else {
-		// @NOTE The context needs to be set BEFORE loading glad
-		glfwMakeContextCurrent(_window);
+	glfwMakeContextCurrent(_window);
+	return true;
+}
 
-		// Init GLAD
-		if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
-			std::cerr << "Failed to initialize GLAD: " << strerror(errno) << std::endl;
-			return false;
-		}
+bool _initGLAD() {
+	// Init GLAD
+	if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+		std::cerr << "Failed to initialize GLAD: " << strerror(errno) << std::endl;
+		return false;
+	}
+	return true;
+}
+
+bool renderer_init(int window_width, int window_height, const char* title, bool fullscreen) {
+	_initGLFW();
+	if (!_createWindow(window_width, window_height, title, fullscreen) || !_initGLAD()) {
+		return false;
 	}
 
 	// @NOTE This defines the viewport used by OpenGL IN the window, not
