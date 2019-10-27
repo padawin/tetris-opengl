@@ -1,11 +1,12 @@
-#include "renderer.hpp"
-
 #include <iostream>
 #include <errno.h>
 #include <string.h>
 
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
+
+#include "renderer.hpp"
+#include "shader.hpp"
 
 GLFWwindow *_window;
 
@@ -60,6 +61,11 @@ bool renderer_init(int window_width, int window_height, const char* title, bool 
 	// @NOTE This defines the viewport used by OpenGL IN the window, not
 	// the position/geometry of the window in the screen.
 	glViewport(0, 0, window_width, window_height);
+
+	if (!shader_loadShaders()) {
+		return false;
+	}
+
 	return true;
 }
 
