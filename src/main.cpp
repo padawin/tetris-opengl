@@ -12,6 +12,9 @@ const int WINDOW_HEIGHT = 600;
 
 bool _setBinaryPath(int argc, char* args[]);
 
+void update();
+void render();
+
 int main(int argc, char* args[]) {
 	if (!_setBinaryPath(argc, args)) {
 		return 1;
@@ -20,7 +23,7 @@ int main(int argc, char* args[]) {
 	bool initOK = renderer_init(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, false);
 
 	if (initOK) {
-		renderer_main_loop();
+		renderer_main_loop(update, render);
 	}
 
 	renderer_cleanup();
@@ -36,4 +39,12 @@ bool _setBinaryPath(int argc, char* args[]) {
 
 	config_setBinPath(binaryPath);
 	return true;
+}
+
+void update() {
+
+}
+
+void render() {
+
 }

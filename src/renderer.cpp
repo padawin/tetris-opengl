@@ -69,15 +69,14 @@ bool renderer_init(int window_width, int window_height, const char* title, bool 
 	return true;
 }
 
-void renderer_main_loop() {
+void renderer_main_loop(void (*updateCB)(), void (*renderCB)()) {
 	while(!glfwWindowShouldClose(_window)) {
 		glfwPollEvents();
 		_processInput();
-		// @TODO update
-		// @TODO render: set data in an array of vertices
-		// @TODO send the array of vertices in the GPU using glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+		(*updateCB)();
+		(*renderCB)();
 		glfwSwapBuffers(_window);
 	}
 }
