@@ -13,7 +13,7 @@ GLFWwindow *_window;
 void _initGLFW();
 bool _createWindow(int window_width, int window_height, const char* title, bool fullscreen);
 bool _initGLAD();
-void processInput();
+void _processInput();
 
 void _initGLFW() {
 	// Init GLFW
@@ -62,7 +62,7 @@ bool renderer_init(int window_width, int window_height, const char* title, bool 
 	// the position/geometry of the window in the screen.
 	glViewport(0, 0, window_width, window_height);
 
-	if (!shader_loadShaders()) {
+	if (!shader_loadPrograms()) {
 		return false;
 	}
 
@@ -72,14 +72,17 @@ bool renderer_init(int window_width, int window_height, const char* title, bool 
 void renderer_main_loop() {
 	while(!glfwWindowShouldClose(_window)) {
 		glfwPollEvents();
-		processInput();
+		_processInput();
+		// @TODO update
+		// @TODO render: set data in an array of vertices
+		// @TODO send the array of vertices in the GPU using glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glfwSwapBuffers(_window);
 	}
 }
 
-void processInput() {
+void _processInput() {
 	if (glfwGetKey(_window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(_window, true);
 	}

@@ -4,6 +4,6 @@
 #include <string>
 #include "glad/glad.h"
 
-bool shader_loadShaders();
+bool shader_loadPrograms();
 
 #endif
