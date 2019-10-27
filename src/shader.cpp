@@ -168,3 +168,10 @@ void _deleteShaders() {
 	_vertexShaders.clear();
 	_fragmentShaders.clear();
 }
+
+GLuint shader_getProgram(std::string programName) {
+	if (programs.find(programName) == programs.end()) {
+		return 0;
+	}
+	return programs[programName];
+}

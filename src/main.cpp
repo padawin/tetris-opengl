@@ -6,14 +6,19 @@
 #include "config.hpp"
 #include "renderer.hpp"
 
+#include "Triangle.hpp"
+
 const char* WINDOW_TITLE = "Learn OpenGL";
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 
 bool _setBinaryPath(int argc, char* args[]);
 
+void __initGame();
 void update();
 void render();
+
+Triangle t1;
 
 int main(int argc, char* args[]) {
 	if (!_setBinaryPath(argc, args)) {
@@ -21,6 +26,8 @@ int main(int argc, char* args[]) {
 	}
 
 	bool initOK = renderer_init(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, false);
+
+	__initGame();
 
 	if (initOK) {
 		renderer_main_loop(update, render);
@@ -41,10 +48,14 @@ bool _setBinaryPath(int argc, char* args[]) {
 	return true;
 }
 
+void __initGame() {
+	t1.init();
+}
+
 void update() {
 
 }
 
 void render() {
-
+	t1.render();
 }

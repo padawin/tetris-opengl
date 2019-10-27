@@ -5,5 +5,6 @@
 #include "glad/glad.h"
 
 bool shader_loadPrograms();
+GLuint shader_getProgram(std::string programName);
 
 #endif
