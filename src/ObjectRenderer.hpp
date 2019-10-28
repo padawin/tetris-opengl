@@ -16,6 +16,7 @@ class ObjectRenderer {
 	public:
 	void init();
 	void setVertices(float* vertices, unsigned int* indices, int verticesCount, int indicesCount);
+	void setShaderProgram(std::string shaderProgram);
 	void render() const;
 };
 
