@@ -1,5 +1,3 @@
-#include "renderer.hpp"
-
 #include <iostream>
 #include <errno.h>
 #include <string.h>
@@ -7,10 +5,15 @@
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 
+#include "renderer.hpp"
+#include "shader.hpp"
+
 GLFWwindow *_window;
 
 void _initGLFW();
-void processInput();
+bool _createWindow(int window_width, int window_height, const char* title, bool fullscreen);
+bool _initGLAD();
+void _processInput();
 
 void _initGLFW() {
 	// Init GLFW
@@ -23,9 +26,7 @@ void _initGLFW() {
 	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 }
 
-bool renderer_init(int window_width, int window_height, const char* title, bool fullscreen) {
-	_initGLFW();
-
+bool _createWindow(int window_width, int window_height, const char* title, bool fullscreen) {
 	GLFWmonitor* monitor = NULL;
 	if (fullscreen) {
 		monitor = glfwGetPrimaryMonitor();
@@ -38,34 +39,49 @@ bool renderer_init(int window_width, int window_height, const char* title, bool 
 		std::cerr << "Failed to create GLFW window: " << strerror(errno) << std::endl;
 		return false;
 	}
-	else {
-		// @NOTE The context needs to be set BEFORE loading glad
-		glfwMakeContextCurrent(_window);
+	glfwMakeContextCurrent(_window);
+	return true;
+}
 
-		// Init GLAD
-		if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
-			std::cerr << "Failed to initialize GLAD: " << strerror(errno) << std::endl;
-			return false;
-		}
+bool _initGLAD() {
+	// Init GLAD
+	if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+		std::cerr << "Failed to initialize GLAD: " << strerror(errno) << std::endl;
+		return false;
+	}
+	return true;
+}
+
+bool renderer_init(int window_width, int window_height, const char* title, bool fullscreen) {
+	_initGLFW();
+	if (!_createWindow(window_width, window_height, title, fullscreen) || !_initGLAD()) {
+		return false;
 	}
 
 	// @NOTE This defines the viewport used by OpenGL IN the window, not
 	// the position/geometry of the window in the screen.
 	glViewport(0, 0, window_width, window_height);
+
+	if (!shader_loadPrograms()) {
+		return false;
+	}
+
 	return true;
 }
 
-void renderer_main_loop() {
+void renderer_main_loop(void (*updateCB)(), void (*renderCB)()) {
 	while(!glfwWindowShouldClose(_window)) {
 		glfwPollEvents();
-		processInput();
+		_processInput();
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+		(*updateCB)();
+		(*renderCB)();
 		glfwSwapBuffers(_window);
 	}
 }
 
-void processInput() {
+void _processInput() {
 	if (glfwGetKey(_window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(_window, true);
 	}

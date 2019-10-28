@@ -24,7 +24,7 @@ CFLAGS = -g -O2 -Wall -Wmissing-declarations -Weffc++ \
 CFLAGS += -Iglad/include
 LIBS = -lGL -lGLU -lglfw -ldl
 
-PROG = exercise1
+PROG = exercise2
 SRCDIR = src
 BINDIR = bin
 BUILDDIR = build
