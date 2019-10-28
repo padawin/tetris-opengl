@@ -11,11 +11,12 @@ class ObjectRenderer {
 	unsigned int m_iEBO = 0;
 	int m_iIndicesCount = 0;
 	// Shader program to use
-	const char* m_sShaderProgram = "default";
+	std::string m_sShaderProgram = "default";
 
 	public:
 	void init();
 	void setVertices(float* vertices, unsigned int* indices, int verticesCount, int indicesCount);
+	void setShaderProgram(std::string shaderProgram);
 	void render() const;
 };
 

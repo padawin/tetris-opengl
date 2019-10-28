@@ -31,8 +31,12 @@ void ObjectRenderer::setVertices(float* vertices, unsigned int* indices, int ver
 	glBindVertexArray(0);
 }
 
+void ObjectRenderer::setShaderProgram(std::string shaderProgram) {
+	m_sShaderProgram = shaderProgram;
+}
+
 void ObjectRenderer::render() const {
-	glUseProgram(shader_getProgram(m_sShaderProgram));
+	glUseProgram(shader_getProgram(m_sShaderProgram.c_str()));
 	glBindVertexArray(m_iVAO);
 	// TODO The mode should be configurable
 	glDrawElements(GL_TRIANGLES, m_iIndicesCount, GL_UNSIGNED_INT, 0);
