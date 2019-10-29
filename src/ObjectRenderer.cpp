@@ -2,6 +2,7 @@
 #include "ObjectRenderer.hpp"
 #include "glad/glad.h"
 #include "shader.hpp"
+#include <GLFW/glfw3.h>
 
 void ObjectRenderer::init() {
 	glGenVertexArrays(1, &m_iVAO);
@@ -36,7 +37,11 @@ void ObjectRenderer::setShaderProgram(std::string shaderProgram) {
 }
 
 void ObjectRenderer::render() const {
-	glUseProgram(shader_getProgram(m_sShaderProgram.c_str()));
+	GLuint shaderProgram = shader_getProgram(m_sShaderProgram.c_str());
+	float timeValue = (float) glfwGetTime();
+	int timeLocation = glGetUniformLocation(shaderProgram, "currentTime");
+	glUseProgram(shaderProgram);
+	glUniform1f(timeLocation, timeValue);
 	glBindVertexArray(m_iVAO);
 	// TODO The mode should be configurable
 	glDrawElements(GL_TRIANGLES, m_iIndicesCount, GL_UNSIGNED_INT, 0);
