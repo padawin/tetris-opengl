@@ -7,6 +7,7 @@
 #include "renderer.hpp"
 
 #include "Triangle.hpp"
+#include "Rectangle.hpp"
 
 const char* WINDOW_TITLE = "Learn OpenGL";
 const int WINDOW_WIDTH = 800;
@@ -19,6 +20,7 @@ void update();
 void render();
 
 Triangle t1;
+Rectangle r1;
 
 int main(int argc, char* args[]) {
 	if (!_setBinaryPath(argc, args)) {
@@ -50,6 +52,7 @@ bool _setBinaryPath(int argc, char* args[]) {
 
 void __initGame() {
 	t1.init();
+	r1.init();
 }
 
 void update() {
@@ -58,4 +61,5 @@ void update() {
 
 void render() {
 	t1.render();
+	r1.render();
 }
