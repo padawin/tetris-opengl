@@ -3,6 +3,10 @@
 #include "glad/glad.h"
 #include "shader.hpp"
 #include <GLFW/glfw3.h>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+ObjectRenderer::ObjectRenderer() : m_transformMatrix( glm::mat4(1.0f)) {}
 
 void ObjectRenderer::init() {
 	glGenVertexArrays(1, &m_iVAO);
@@ -45,8 +49,11 @@ void ObjectRenderer::render() const {
 	GLuint shaderProgram = shader_getProgram(m_sShaderProgram.c_str());
 	float timeValue = (float) glfwGetTime();
 	int timeLocation = glGetUniformLocation(shaderProgram, "currentTime");
+	int transformLocation = glGetUniformLocation(shaderProgram, "transform");
 	glUseProgram(shaderProgram);
 	glUniform1f(timeLocation, timeValue);
+	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(m_transformMatrix));
+
 	glBindVertexArray(m_iVAO);
 	// TODO The mode should be configurable
 	glDrawElements(GL_TRIANGLES, m_iIndicesCount, GL_UNSIGNED_INT, 0);
