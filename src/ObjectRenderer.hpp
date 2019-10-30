@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <glm/glm.hpp>
 
 class ObjectRenderer {
 	private:
@@ -13,7 +14,10 @@ class ObjectRenderer {
 	// Shader program to use
 	std::string m_sShaderProgram = "default";
 
+	glm::mat4 m_transformMatrix;
+
 	public:
+	ObjectRenderer();
 	void init();
 	void setVertices(float* vertices, unsigned int* indices, int verticesCount, int indicesCount);
 	void setShaderProgram(std::string shaderProgram);
