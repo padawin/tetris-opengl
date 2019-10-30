@@ -21,7 +21,7 @@ CFLAGS = -g -O2 -Wall -Wmissing-declarations -Weffc++ \
 	-Wvariadic-macros \
 	-Wwrite-strings
 
-CFLAGS += -Iglad/include
+CFLAGS += -Ilib/glad/include -Ilib/stb_image
 LIBS = -lGL -lGLU -lglfw -ldl
 
 PROG = exercise2
@@ -30,8 +30,8 @@ BINDIR = bin
 BUILDDIR = build
 CONFDIST := config/playercontrolsmapping.txt
 
-DEP := $(shell find $(SRCDIR)/ glad/include/ -type f -name '*.hpp' -o -name '*.h')
-SRC := $(shell find $(SRCDIR)/ glad/src/ -type f -name '*.cpp' -o -name '*.c')
+DEP := $(shell find $(SRCDIR)/ lib/glad/include/ -type f -name '*.hpp' -o -name '*.h')
+SRC := $(shell find $(SRCDIR)/ lib/glad/src/ -type f -name '*.cpp' -o -name '*.c')
 OBJ = $(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.o,$(SRC))
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp $(DEP)
