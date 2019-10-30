@@ -47,10 +47,14 @@ void ObjectRenderer::setShaderProgram(std::string shaderProgram) {
 
 void ObjectRenderer::render() const {
 	GLuint shaderProgram = shader_getProgram(m_sShaderProgram.c_str());
+
 	float timeValue = (float) glfwGetTime();
+
 	int timeLocation = glGetUniformLocation(shaderProgram, "currentTime");
 	int transformLocation = glGetUniformLocation(shaderProgram, "transform");
+
 	glUseProgram(shaderProgram);
+
 	glUniform1f(timeLocation, timeValue);
 	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(m_transformMatrix));
 
