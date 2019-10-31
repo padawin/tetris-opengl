@@ -21,7 +21,8 @@ CFLAGS = -g -O2 -Wall -Wmissing-declarations -Weffc++ \
 	-Wvariadic-macros \
 	-Wwrite-strings
 
-CFLAGS += -Ilib/glad/include -Ilib/stb_image
+IFLAGS = -Ilib/glad/include -Ilib/stb_image
+CFLAGS += $(IFLAGS)
 LIBS = -lGL -lGLU -lglfw -ldl
 
 PROG = exercise2
@@ -35,6 +36,12 @@ SRC := $(shell find $(SRCDIR)/ lib/glad/src/ -type f -name '*.cpp' -o -name '*.c
 OBJ = $(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.o,$(SRC))
 
 all: prepare $(PROG)
+
+# stb_image spit loads of warnings and error with the above flags, so let's
+# compile it more "loosely"
+$(BUILDDIR)/stb_image.o: $(SRCDIR)/stb_image.cpp
+	 @mkdir -p $(shell dirname $@)
+	 $(CC) -c -o $(BUILDDIR)/stb_image.o $(SRCDIR)/stb_image.cpp $(IFLAGS)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp $(DEP)
 	@mkdir -p $(shell dirname $@)
