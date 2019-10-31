@@ -34,11 +34,11 @@ DEP := $(shell find $(SRCDIR)/ lib/glad/include/ -type f -name '*.hpp' -o -name 
 SRC := $(shell find $(SRCDIR)/ lib/glad/src/ -type f -name '*.cpp' -o -name '*.c')
 OBJ = $(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.o,$(SRC))
 
+all: prepare $(PROG)
+
 $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp $(DEP)
 	@mkdir -p $(shell dirname $@)
 	$(CC) -c -o $@ $< $(CFLAGS)
-
-all: prepare $(PROG)
 
 $(PROG): $(OBJ)
 	$(CC) -o $(BINDIR)/$@ $^ $(CFLAGS) $(LIBS)
