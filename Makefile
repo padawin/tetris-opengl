@@ -21,33 +21,38 @@ CFLAGS = -g -O2 -Wall -Wmissing-declarations -Weffc++ \
 	-Wvariadic-macros \
 	-Wwrite-strings
 
-IFLAGS = -Ilib/glad/include -Ilib/stb_image
-CFLAGS += $(IFLAGS)
-LIBS = -lGL -lGLU -lglfw -ldl
-
 PROG = exercise2
 SRCDIR = src
+LIBDIR = lib
 BINDIR = bin
 BUILDDIR = build
 CONFDIST := config/playercontrolsmapping.txt
 
-DEP := $(shell find $(SRCDIR)/ lib/glad/include/ -type f -name '*.hpp' -o -name '*.h')
-SRC := $(shell find $(SRCDIR)/ lib/glad/src/ -type f -name '*.cpp' -o -name '*.c')
-OBJ = $(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.o,$(SRC))
+IFLAGS = -I$(LIBDIR)/glad/include -I$(LIBDIR)/stb_image
+CFLAGS += $(IFLAGS)
+LIBS = -lGL -lGLU -lglfw -ldl
+
+DEP := $(shell find $(SRCDIR)/ $(LIBDIR)/ -type f -name '*.hpp' -o -name '*.h')
+
+SRC := $(shell find $(SRCDIR)/ -type f -name '*.cpp' -o -name '*.c')
+OBJ = $(patsubst %.cpp,$(BUILDDIR)/%.o,$(SRC))
+
+# Local libs can be either *.c or *.cpp files. The object files will be: *.c.o
+# or *.cpp.o
+LIBSRC := $(shell find $(LIBDIR)/ -type f -name '*.cpp' -o -name '*.c')
+LIBOBJ = $(patsubst %,$(BUILDDIR)/%.o,$(LIBSRC))
 
 all: prepare $(PROG)
 
-# stb_image spit loads of warnings and error with the above flags, so let's
-# compile it more "loosely"
-$(BUILDDIR)/stb_image.o: $(SRCDIR)/stb_image.cpp
-	 @mkdir -p $(shell dirname $@)
-	 $(CC) -c -o $(BUILDDIR)/stb_image.o $(SRCDIR)/stb_image.cpp $(IFLAGS)
-
-$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp $(DEP)
+$(BUILDDIR)/$(SRCDIR)/%.o: $(SRCDIR)/%.cpp $(DEP)
 	@mkdir -p $(shell dirname $@)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-$(PROG): $(OBJ)
+$(BUILDDIR)/$(LIBDIR)/%.o: $(LIBDIR)/%
+	@mkdir -p $(shell dirname $@)
+	$(CC) -c -o $@ $< $(IFLAGS)
+
+$(PROG): $(OBJ) $(LIBOBJ)
 	$(CC) -o $(BINDIR)/$@ $^ $(CFLAGS) $(LIBS)
 
 prepare:
