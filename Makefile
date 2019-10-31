@@ -26,6 +26,7 @@ SRCDIR = src
 LIBDIR = lib
 BINDIR = bin
 BUILDDIR = build
+RESOURCESDIR = resources
 CONFDIST := config/playercontrolsmapping.txt
 
 IFLAGS = -I$(LIBDIR)/glad/include -I$(LIBDIR)/stb_image
@@ -56,8 +57,7 @@ $(PROG): $(OBJ) $(LIBOBJ)
 	$(CC) -o $(BINDIR)/$@ $^ $(CFLAGS) $(LIBS)
 
 prepare:
-	@mkdir -p $(BUILDDIR)
-	@mkdir -p $(BINDIR)
+	@mkdir -p $(BUILDDIR) $(BINDIR) $(RESOURCESDIR)
 
 clean:
 	rm -rf $(BUILDDIR) $(BINDIR)
