@@ -5,6 +5,8 @@
 
 #include "config.hpp"
 #include "renderer.hpp"
+#include "shader.hpp"
+#include "texture.hpp"
 
 #include "Triangle.hpp"
 #include "Rectangle.hpp"
@@ -27,7 +29,11 @@ int main(int argc, char* args[]) {
 		return 1;
 	}
 
-	bool initOK = renderer_init(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, false);
+	bool initOK = (
+		renderer_init(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, false)
+		&& shader_loadPrograms()
+		&& texture_loadAll()
+	);
 
 	__initGame();
 

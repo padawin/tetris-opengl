@@ -2,15 +2,17 @@
 
 void Triangle::init() {
 	float vertices[] = {
-		0.5f, 1.0f, 0.0f, // top
-		0.0f, 0.0f, 0.0f, // bottom right
-		1.0f, 0.0f, 0.0f  // bottom left
+		// vertices       // texture
+		0.5f, 1.0f, 0.0f, 0.5f, 1.0f, // top
+		0.0f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom right
+		1.0f, 0.0f, 0.0f, 0.0f, 0.0f  // bottom left
 	};
 	unsigned int indices[] = {
 		0, 1, 2,
 	};
 	m_objectRenderer.init();
-	m_objectRenderer.setShaderProgram("ko");
+	m_objectRenderer.setShaderProgram("default");
+	m_objectRenderer.setTexture("wall.jpg");
 	m_objectRenderer.setVertices(
 		vertices,
 		indices,
