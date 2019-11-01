@@ -13,7 +13,8 @@ void Rectangle::init() {
 		1, 2, 3    // second triangle
 	};
 	m_objectRenderer.init();
-	m_objectRenderer.setShaderProgram("ok");
+	m_objectRenderer.setShaderProgram("default");
+	m_objectRenderer.setTexture("container.jpg");
 	m_objectRenderer.setVertices(
 		vertices,
 		indices,

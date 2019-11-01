@@ -11,7 +11,8 @@ void Triangle::init() {
 		0, 1, 2,
 	};
 	m_objectRenderer.init();
-	m_objectRenderer.setShaderProgram("ko");
+	m_objectRenderer.setShaderProgram("default");
+	m_objectRenderer.setTexture("wall.jpg");
 	m_objectRenderer.setVertices(
 		vertices,
 		indices,
