@@ -2,10 +2,11 @@
 
 void Rectangle::init() {
 	float vertices[] = {
-		 0.0f, 1.0f, 0.0f, // top right
-		-1.0f, 1.0f, 0.0f, // top left
-		 0.0f, 0.0f, 0.0f, // bottom right
-		-1.0f, 0.0f, 0.0f  // bottom left
+		// vertices        // texture
+		 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, // top right
+		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // top left
+		 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom right
+		-1.0f, 0.0f, 0.0f, 0.0f, 0.0f  // bottom left
 	};
 	unsigned int indices[] = {  // note that we start from 0!
 		0, 1, 2,   // first triangle

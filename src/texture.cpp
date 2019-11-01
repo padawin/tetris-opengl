@@ -59,7 +59,15 @@ bool _loadTexture(std::string name, std::string path) {
 		std::cerr << "Failed to load texture: " << path << std::endl;
 		res = false;
 	}
+	glBindTexture(GL_TEXTURE_2D, 0);
 	stbi_image_free(data);
 	return res;
 
+}
+
+GLuint texture_get(const char* textureName) {
+	if (textures.find(textureName) == textures.end()) {
+		return 0;
+	}
+	return textures[textureName].textureID;
 }

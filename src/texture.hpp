@@ -2,6 +2,7 @@
 #define __TEXTURE__
 
 #include <string>
+#include "glad/glad.h"
 
 typedef struct {
 	int width = 0;
@@ -11,5 +12,6 @@ typedef struct {
 } Texture;
 
 bool texture_loadAll();
+GLuint texture_get(const char* textureName);
 
 #endif

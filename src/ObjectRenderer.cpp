@@ -2,6 +2,7 @@
 #include "ObjectRenderer.hpp"
 #include "glad/glad.h"
 #include "shader.hpp"
+#include "texture.hpp"
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -26,8 +27,12 @@ void ObjectRenderer::setVertices(float* vertices, unsigned int* indices, int ver
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_iEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize, indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	// Vertex
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+	// Texture
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	// note that this is allowed, the call to glVertexAttribPointer registered
 	// VBO as the vertex attribute's bound vertex buffer object so afterwards we
@@ -45,8 +50,13 @@ void ObjectRenderer::setShaderProgram(std::string shaderProgram) {
 	m_sShaderProgram = shaderProgram;
 }
 
+void ObjectRenderer::setTexture(std::string texture) {
+	m_sTexture = texture;
+}
+
 void ObjectRenderer::render() const {
 	GLuint shaderProgram = shader_getProgram(m_sShaderProgram.c_str());
+	GLuint texture = texture_get(m_sTexture.c_str());
 
 	float timeValue = (float) glfwGetTime();
 
@@ -54,6 +64,7 @@ void ObjectRenderer::render() const {
 	int transformLocation = glGetUniformLocation(shaderProgram, "transform");
 
 	glUseProgram(shaderProgram);
+	glBindTexture(GL_TEXTURE_2D, texture);
 
 	glUniform1f(timeLocation, timeValue);
 	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(m_transformMatrix));
