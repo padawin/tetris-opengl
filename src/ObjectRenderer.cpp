@@ -7,7 +7,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-ObjectRenderer::ObjectRenderer() : m_transformMatrix( glm::mat4(1.0f)) {}
+ObjectRenderer::ObjectRenderer() :
+	m_scale(glm::mat4(1.0f)),
+	m_rotation(glm::mat4(1.0f)),
+	m_position(glm::mat4(1.0f))
+{}
 
 void ObjectRenderer::init() {
 	glGenVertexArrays(1, &m_iVAO);
@@ -54,11 +58,29 @@ void ObjectRenderer::setTexture(std::string texture) {
 	m_sTexture = texture;
 }
 
+void ObjectRenderer::setScale(float x, float y, float z) {
+	m_scale = glm::scale(glm::mat4(1.0f), glm::vec3(x, y, z));
+}
+
+void ObjectRenderer::setRotation(float x, float y, float z) {
+	glm::mat4 trans = glm::mat4(1.0f);
+	trans = glm::rotate(trans, glm::radians(x), glm::vec3(1.0, 0.0, 0.0));
+	trans = glm::rotate(trans, glm::radians(y), glm::vec3(0.0, 1.0, 0.0));
+	trans = glm::rotate(trans, glm::radians(z), glm::vec3(0.0, 0.0, 1.0));
+	m_rotation = trans;
+}
+
+void ObjectRenderer::setPosition(float x, float y, float z) {
+	m_position = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
+}
+
 void ObjectRenderer::render() const {
 	GLuint shaderProgram = shader_getProgram(m_sShaderProgram.c_str());
 	GLuint texture = texture_get(m_sTexture.c_str());
 
 	float timeValue = (float) glfwGetTime();
+	glm::mat4 transformMatrix = glm::mat4(1.0f);
+	transformMatrix = m_position * m_rotation * m_scale * transformMatrix;
 
 	int timeLocation = glGetUniformLocation(shaderProgram, "currentTime");
 	int transformLocation = glGetUniformLocation(shaderProgram, "transform");
@@ -67,7 +89,7 @@ void ObjectRenderer::render() const {
 	glBindTexture(GL_TEXTURE_2D, texture);
 
 	glUniform1f(timeLocation, timeValue);
-	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(m_transformMatrix));
+	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
 
 	glBindVertexArray(m_iVAO);
 	// TODO The mode should be configurable
