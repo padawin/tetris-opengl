@@ -15,7 +15,6 @@ bool _initGLAD();
 void _processInput();
 
 void _initGLFW() {
-	// Init GLFW
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -66,20 +65,24 @@ bool renderer_init(int window_width, int window_height, const char* title, bool 
 
 void renderer_main_loop(void (*updateCB)(), void (*renderCB)()) {
 	while(!glfwWindowShouldClose(_window)) {
-		glfwPollEvents();
 		_processInput();
+		(*updateCB)();
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		(*updateCB)();
 		(*renderCB)();
 		glfwSwapBuffers(_window);
+		glfwPollEvents();
 	}
 }
 
 void _processInput() {
-	if (glfwGetKey(_window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+	if (renderer_isKeyPressed(GLFW_KEY_ESCAPE)) {
 		glfwSetWindowShouldClose(_window, true);
 	}
+}
+
+bool renderer_isKeyPressed(const int key) {
+	return glfwGetKey(_window, key) == GLFW_PRESS;
 }
 
 void renderer_cleanup() {

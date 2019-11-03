@@ -4,12 +4,12 @@
 #include <libgen.h> // dirname
 
 #include "game/config.hpp"
+
 #include "opengl/renderer.hpp"
 #include "opengl/shader.hpp"
 #include "opengl/texture.hpp"
 
-#include "example/Triangle.hpp"
-#include "example/Rectangle.hpp"
+#include "game/Game.hpp"
 
 const char* WINDOW_TITLE = "Learn OpenGL";
 const int WINDOW_WIDTH = 800;
@@ -17,12 +17,10 @@ const int WINDOW_HEIGHT = 600;
 
 bool _setBinaryPath(int argc, char* args[]);
 
-void __initGame();
 void update();
 void render();
 
-Triangle t1;
-Rectangle r1;
+Game game;
 
 int main(int argc, char* args[]) {
 	if (!_setBinaryPath(argc, args)) {
@@ -35,9 +33,7 @@ int main(int argc, char* args[]) {
 		&& texture_loadAll()
 	);
 
-	__initGame();
-
-	if (initOK) {
+	if (initOK && game.init()) {
 		renderer_main_loop(update, render);
 	}
 
@@ -56,16 +52,10 @@ bool _setBinaryPath(int argc, char* args[]) {
 	return true;
 }
 
-void __initGame() {
-	t1.init();
-	r1.init();
-}
-
 void update() {
-
+	game.update();
 }
 
 void render() {
-	t1.render();
-	r1.render();
+	game.render();
 }

@@ -1,4 +1,5 @@
 #include "Triangle.hpp"
+#include "opengl/ObjectRenderer.hpp"
 
 void Triangle::init() {
 	float vertices[] = {
@@ -10,30 +11,16 @@ void Triangle::init() {
 	unsigned int indices[] = {
 		0, 1, 2,
 	};
-	m_objectRenderer.init();
-	m_objectRenderer.setShaderProgram("default");
-	m_objectRenderer.setTexture("wall.jpg");
-	m_objectRenderer.setVertices(
+	m_renderer = std::shared_ptr<GameObjectRenderer>(new ObjectRenderer());
+	ObjectRenderer *renderer = (ObjectRenderer *) m_renderer.get();
+
+	renderer->init();
+	renderer->setShaderProgram("default");
+	renderer->setTexture("wall.jpg");
+	renderer->setVertices(
 		vertices,
 		indices,
 		(int) sizeof(vertices),
 		(int) sizeof(indices)
 	);
-}
-
-void Triangle::setPos(int x, int y) {
-	m_iX = x;
-	m_iY = y;
-}
-
-int Triangle::getX() const {
-	return m_iX;
-}
-
-int Triangle::getY() const {
-	return m_iY;
-}
-
-void Triangle::render() const {
-	m_objectRenderer.render();
 }

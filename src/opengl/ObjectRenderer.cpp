@@ -74,7 +74,7 @@ void ObjectRenderer::setPosition(float x, float y, float z) {
 	m_position = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
 }
 
-void ObjectRenderer::render() const {
+void ObjectRenderer::render() {
 	GLuint shaderProgram = shader_getProgram(m_sShaderProgram.c_str());
 	GLuint texture = texture_get(m_sTexture.c_str());
 
