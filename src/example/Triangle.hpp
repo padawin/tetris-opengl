@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "ObjectRenderer.hpp"
+#include "opengl/ObjectRenderer.hpp"
 
 class Triangle {
 	private:

@@ -3,13 +3,13 @@
 #include <stdlib.h> // realpath
 #include <libgen.h> // dirname
 
-#include "config.hpp"
-#include "renderer.hpp"
-#include "shader.hpp"
-#include "texture.hpp"
+#include "game/config.hpp"
+#include "opengl/renderer.hpp"
+#include "opengl/shader.hpp"
+#include "opengl/texture.hpp"
 
-#include "Triangle.hpp"
-#include "Rectangle.hpp"
+#include "example/Triangle.hpp"
+#include "example/Rectangle.hpp"
 
 const char* WINDOW_TITLE = "Learn OpenGL";
 const int WINDOW_WIDTH = 800;

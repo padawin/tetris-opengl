@@ -29,7 +29,7 @@ BUILDDIR = build
 RESOURCESDIR = resources
 CONFDIST := config/playercontrolsmapping.txt
 
-IFLAGS = -I$(LIBDIR)/glad/include -I$(LIBDIR)/stb_image
+IFLAGS = -I$(LIBDIR)/glad/include -I$(LIBDIR)/stb_image -Isrc
 CFLAGS += $(IFLAGS)
 LIBS = -lGL -lGLU -lglfw -ldl
 
