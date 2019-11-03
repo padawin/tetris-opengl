@@ -15,7 +15,9 @@ class ObjectRenderer {
 	std::string m_sShaderProgram = "default";
 	std::string m_sTexture = "";
 
-	glm::mat4 m_transformMatrix;
+	glm::mat4 m_scale;
+	glm::mat4 m_rotation;
+	glm::mat4 m_position;
 
 	public:
 	ObjectRenderer();
@@ -23,6 +25,11 @@ class ObjectRenderer {
 	void setVertices(float* vertices, unsigned int* indices, int verticesCount, int indicesCount);
 	void setShaderProgram(std::string shaderProgram);
 	void setTexture(std::string texture);
+
+	void setScale(float x, float y, float z);
+	void setRotation(float x, float y, float z);
+	void setPosition(float x, float y, float z);
+
 	void render() const;
 };
 
