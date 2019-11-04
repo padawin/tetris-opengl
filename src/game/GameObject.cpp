@@ -1,4 +1,11 @@
 #include "GameObject.hpp"
+#include <iostream>
+
+void GameObject::update() {
+	if (m_renderer != 0) {
+		m_renderer->setPosition(m_iX, m_iY, m_iZ);
+	}
+}
 
 void GameObject::render() {
 	if (m_renderer != 0) {

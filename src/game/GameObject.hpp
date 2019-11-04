@@ -18,6 +18,7 @@ class GameObject {
 	virtual float getX() const;
 	virtual float getY() const;
 	virtual float getZ() const;
+	virtual void update();
 	virtual void render();
 };
 

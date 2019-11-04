@@ -26,6 +26,9 @@ void GameScene::update(StateMachine<SceneState> &stateMachine) {
 	if (m_userActions.getActionState("QUIT")) {
 		stateMachine.clean();
 	}
+	for (auto object : m_vObjects) {
+		object->update();
+	}
 }
 
 void GameScene::render() {
