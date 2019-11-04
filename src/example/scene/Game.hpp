@@ -9,6 +9,7 @@
 
 class GameScene : public SceneState {
 	private:
+	std::shared_ptr<GameObject> m_player = 0;
 	std::vector<std::shared_ptr<GameObject>> m_vObjects = {};
 
 	public:
