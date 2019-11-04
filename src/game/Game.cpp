@@ -1,23 +1,34 @@
 #include "Game.hpp"
-#include "example/Triangle.hpp"
-#include "example/Rectangle.hpp"
+
+Game::Game(
+	StateMachine<SceneState> &stateMachine,
+	std::shared_ptr<Renderer> renderer,
+	std::shared_ptr<InputHandler> inputHandler
+) :
+	m_stateMachine(stateMachine),
+	m_renderer(renderer),
+	m_inputHandler(inputHandler)
+{
+}
 
 bool Game::init() {
-	auto rectangle = std::shared_ptr<GameObject>(new Rectangle());
-	auto triangle = std::shared_ptr<GameObject>(new Triangle());
-	rectangle->init();
-	triangle->init();
-	m_vObjects.push_back(rectangle);
-	m_vObjects.push_back(triangle);
-	return true;
+	bool res;
+	res = m_renderer->init();
+	m_bIsRunning = res;
+	return res;
 }
 
-void Game::update() {
-
-}
-
-void Game::render() {
-	for (auto object : m_vObjects) {
-		object->render();
+void Game::mainLoop() {
+	while (m_stateMachine.getCurrentState() != NULL) {
+		m_renderer->frame(this);
 	}
+}
+
+void Game::frame() {
+	m_stateMachine.update();
+	m_stateMachine.render();
+}
+
+void Game::shutdown() const {
+	m_renderer->shutdown();
 }
