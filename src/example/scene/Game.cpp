@@ -17,6 +17,7 @@ bool GameScene::onEnter() {
 	auto triangle = std::shared_ptr<GameObject>(new Triangle());
 	rectangle->init();
 	triangle->init();
+	m_player = rectangle;
 	m_vObjects.push_back(rectangle);
 	m_vObjects.push_back(triangle);
 	return true;
@@ -25,6 +26,27 @@ bool GameScene::onEnter() {
 void GameScene::update(StateMachine<SceneState> &stateMachine) {
 	if (m_userActions.getActionState("QUIT")) {
 		stateMachine.clean();
+		return;
+	}
+
+	const float playerSpeedX = 0.01f;
+	const float playerSpeedY = 0.01f;
+	float playerX = m_player->getX();
+	float playerY = m_player->getY();
+	float playerZ = m_player->getZ();
+	if (m_userActions.getActionState("RIGHT")) {
+		playerX += playerSpeedX;
+	} else if (m_userActions.getActionState("LEFT")) {
+		playerX -= playerSpeedX;
+	}
+	if (m_userActions.getActionState("UP")) {
+		playerY += playerSpeedY;
+	} else if (m_userActions.getActionState("DOWN")) {
+		playerY -= playerSpeedY;
+	}
+	m_player->setPos(playerX, playerY, playerZ);
+	for (auto object : m_vObjects) {
+		object->update();
 	}
 }
 
