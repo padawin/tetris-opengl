@@ -6,15 +6,15 @@ void GameObject::render() {
 	}
 }
 
-void GameObject::setPos(int x, int y) {
+void GameObject::setPos(float x, float y) {
 	m_iX = x;
 	m_iY = y;
 }
 
-int GameObject::getX() const {
+float GameObject::getX() const {
 	return m_iX;
 }
 
-int GameObject::getY() const {
+float GameObject::getY() const {
 	return m_iY;
 }
