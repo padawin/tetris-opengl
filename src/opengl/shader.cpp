@@ -1,6 +1,6 @@
 #include "shader.hpp"
-#include "config.hpp"
-#include "utils.hpp"
+#include "game/config.hpp"
+#include "game/utils.hpp"
 #include <map>
 #include <vector>
 #include <iostream>

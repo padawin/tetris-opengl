@@ -1,6 +1,6 @@
 #include "texture.hpp"
-#include "config.hpp"
-#include "utils.hpp"
+#include "game/config.hpp"
+#include "game/utils.hpp"
 #include <map>
 #include <dirent.h> // for DIR
 #include <iostream>

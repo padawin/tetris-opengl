@@ -2,14 +2,21 @@
 #include <limits.h> // PATH_MAX
 #include <stdlib.h> // realpath
 #include <libgen.h> // dirname
+#include <iostream>
+#include <memory> // shared_ptr
 
-#include "config.hpp"
-#include "renderer.hpp"
-#include "shader.hpp"
-#include "texture.hpp"
+#include "game/config.hpp"
+#include "game/Game.hpp"
+#include "game/StateMachine.hpp"
+#include "game/SceneState.hpp"
+#include "game/UserActions.hpp"
 
-#include "Triangle.hpp"
-#include "Rectangle.hpp"
+#include "opengl/InputHandler.hpp"
+#include "opengl/Renderer.hpp"
+#include "opengl/shader.hpp"
+#include "opengl/texture.hpp"
+
+#include "example/scene/Game.hpp"
 
 const char* WINDOW_TITLE = "Learn OpenGL";
 const int WINDOW_WIDTH = 800;
@@ -17,31 +24,37 @@ const int WINDOW_HEIGHT = 600;
 
 bool _setBinaryPath(int argc, char* args[]);
 
-void __initGame();
-void update();
-void render();
-
-Triangle t1;
-Rectangle r1;
-
 int main(int argc, char* args[]) {
+	setlocale(LC_ALL,"");
+	time_t t;
+	srand((unsigned int) time(&t));
+
 	if (!_setBinaryPath(argc, args)) {
 		return 1;
 	}
 
-	bool initOK = (
-		renderer_init(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, false)
-		&& shader_loadPrograms()
-		&& texture_loadAll()
-	);
+	std::shared_ptr<OpenGLRenderer> renderer(new OpenGLRenderer(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, false));
+	std::shared_ptr<GLFWInputHandler> inputHandler(new GLFWInputHandler(renderer));
+	UserActions userActions(inputHandler);
 
-	__initGame();
-
-	if (initOK) {
-		renderer_main_loop(update, render);
+	std::string controlsMapping = config_getBinPath() + "/../config/playercontrolsmapping.txt";
+	int actionsSet = userActions.setActionsFromFile(controlsMapping.c_str());
+	if (actionsSet != 0) {
+		std::cerr << "An error occured while loading the player controls mapping: " << actionsSet << "\n";
+		return actionsSet;
 	}
 
-	renderer_cleanup();
+	StateMachine<SceneState> stateMachine = StateMachine<SceneState>();
+	Game g(stateMachine, renderer, inputHandler);
+	if (g.init()
+		&& shader_loadPrograms()
+		&& texture_loadAll()
+	) {
+		stateMachine.pushState(new GameScene(userActions));
+		g.mainLoop();
+	}
+
+	g.shutdown();
 	return 0;
 }
 
@@ -54,18 +67,4 @@ bool _setBinaryPath(int argc, char* args[]) {
 
 	config_setBinPath(binaryPath);
 	return true;
-}
-
-void __initGame() {
-	t1.init();
-	r1.init();
-}
-
-void update() {
-
-}
-
-void render() {
-	t1.render();
-	r1.render();
 }

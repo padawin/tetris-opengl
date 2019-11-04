@@ -1,4 +1,5 @@
 #include "Rectangle.hpp"
+#include "opengl/ObjectRenderer.hpp"
 
 void Rectangle::init() {
 	float vertices[] = {
@@ -12,30 +13,16 @@ void Rectangle::init() {
 		0, 1, 2,   // first triangle
 		1, 2, 3    // second triangle
 	};
-	m_objectRenderer.init();
-	m_objectRenderer.setShaderProgram("default");
-	m_objectRenderer.setTexture("container.jpg");
-	m_objectRenderer.setVertices(
+	m_renderer = std::shared_ptr<GameObjectRenderer>(new ObjectRenderer());
+	ObjectRenderer *renderer = (ObjectRenderer *) m_renderer.get();
+
+	renderer->init();
+	renderer->setShaderProgram("default");
+	renderer->setTexture("container.jpg");
+	renderer->setVertices(
 		vertices,
 		indices,
 		(int) sizeof(vertices),
 		(int) sizeof(indices)
 	);
-}
-
-void Rectangle::setPos(int x, int y) {
-	m_iX = x;
-	m_iY = y;
-}
-
-int Rectangle::getX() const {
-	return m_iX;
-}
-
-int Rectangle::getY() const {
-	return m_iY;
-}
-
-void Rectangle::render() const {
-	m_objectRenderer.render();
 }

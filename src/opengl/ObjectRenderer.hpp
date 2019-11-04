@@ -1,11 +1,12 @@
 #ifndef __OBJECT_RENDERER__
 #define __OBJECT_RENDERER__
 
+#include "game/GameObjectRenderer.hpp"
 #include <string>
 #include <vector>
 #include <glm/glm.hpp>
 
-class ObjectRenderer {
+class ObjectRenderer : public GameObjectRenderer {
 	private:
 	unsigned int m_iVAO = 0;
 	unsigned int m_iVBO = 0;
@@ -30,7 +31,7 @@ class ObjectRenderer {
 	void setRotation(float x, float y, float z);
 	void setPosition(float x, float y, float z);
 
-	void render() const;
+	void render();
 };
 
 #endif
