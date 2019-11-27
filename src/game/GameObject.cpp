@@ -4,12 +4,14 @@
 void GameObject::update() {
 	if (m_renderer != 0) {
 		m_renderer->setPosition(m_iX, m_iY, m_iZ);
+		m_renderer->setRotation(m_iAngleX, m_iAngleY, m_iAngleZ);
+		m_renderer->setScale(m_iScaleX, m_iScaleY, m_iScaleZ);
 	}
 }
 
-void GameObject::render() {
+void GameObject::render(std::shared_ptr<Camera> camera) {
 	if (m_renderer != 0) {
-		m_renderer->render();
+		m_renderer->render(camera);
 	}
 }
 

@@ -2,7 +2,9 @@
 #define __OBJECT_RENDERER__
 
 #include "game/GameObjectRenderer.hpp"
+#include "game/Camera.hpp"
 #include <string>
+#include <memory>
 #include <vector>
 #include <glm/glm.hpp>
 
@@ -31,7 +33,7 @@ class ObjectRenderer : public GameObjectRenderer {
 	void setRotation(float x, float y, float z);
 	void setPosition(float x, float y, float z);
 
-	void render();
+	void render(std::shared_ptr<Camera> camera);
 };
 
 #endif

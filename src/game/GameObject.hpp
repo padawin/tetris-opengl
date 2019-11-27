@@ -3,6 +3,7 @@
 
 #include <memory>
 #include "GameObjectRenderer.hpp"
+#include "Camera.hpp"
 
 class GameObject {
 	protected:
@@ -10,6 +11,12 @@ class GameObject {
 	float m_iX = 0.0f;
 	float m_iY = 0.0f;
 	float m_iZ = 0.0f;
+	float m_iAngleX = 0.0f;
+	float m_iAngleY = 0.0f;
+	float m_iAngleZ = 0.0f;
+	float m_iScaleX = 1.0f;
+	float m_iScaleY = 1.0f;
+	float m_iScaleZ = 1.0f;
 
 	public:
 	virtual ~GameObject() {}
@@ -19,7 +26,7 @@ class GameObject {
 	virtual float getY() const;
 	virtual float getZ() const;
 	virtual void update();
-	virtual void render();
+	virtual void render(std::shared_ptr<Camera> camera);
 };
 
 #endif

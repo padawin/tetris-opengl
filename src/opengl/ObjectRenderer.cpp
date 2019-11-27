@@ -74,22 +74,31 @@ void ObjectRenderer::setPosition(float x, float y, float z) {
 	m_position = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
 }
 
-void ObjectRenderer::render() {
+//void ObjectRenderer::render(std::shared_ptr<Camera> camera  __attribute__((unused))) {
+void ObjectRenderer::render(std::shared_ptr<Camera> camera) {
 	GLuint shaderProgram = shader_getProgram(m_sShaderProgram.c_str());
 	GLuint texture = texture_get(m_sTexture.c_str());
 
 	float timeValue = (float) glfwGetTime();
-	glm::mat4 transformMatrix = glm::mat4(1.0f);
-	transformMatrix = m_position * m_rotation * m_scale * transformMatrix;
+
+	glm::mat4 model = m_position * m_rotation * m_scale * glm::mat4(1.0f);
+	// note that we're translating the scene in the reverse direction of where
+	// we want to move
+	glm::mat4 view = glm::translate(glm::mat4(1.0f), -camera->getPosition());
+	glm::mat4 projection = camera->getProjection();
 
 	int timeLocation = glGetUniformLocation(shaderProgram, "currentTime");
-	int transformLocation = glGetUniformLocation(shaderProgram, "transform");
+	int transformLocation = glGetUniformLocation(shaderProgram, "model");
+	int viewLocation = glGetUniformLocation(shaderProgram, "view");
+	int projectionLocation = glGetUniformLocation(shaderProgram, "projection");
 
 	glUseProgram(shaderProgram);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
 	glUniform1f(timeLocation, timeValue);
-	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
+	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
 
 	glBindVertexArray(m_iVAO);
 	// TODO The mode should be configurable
