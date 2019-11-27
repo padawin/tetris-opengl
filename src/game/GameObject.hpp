@@ -10,6 +10,12 @@ class GameObject {
 	float m_iX = 0.0f;
 	float m_iY = 0.0f;
 	float m_iZ = 0.0f;
+	float m_iAngleX = 0.0f;
+	float m_iAngleY = 0.0f;
+	float m_iAngleZ = 0.0f;
+	float m_iScaleX = 1.0f;
+	float m_iScaleY = 1.0f;
+	float m_iScaleZ = 1.0f;
 
 	public:
 	virtual ~GameObject() {}
