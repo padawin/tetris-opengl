@@ -18,6 +18,8 @@ bool OpenGLRenderer::init(void) {
 		return false;
 	}
 
+	glEnable(GL_DEPTH_TEST);
+
 	// @NOTE This defines the viewport used by OpenGL IN the window, not
 	// the position/geometry of the window in the screen.
 	glViewport(0, 0, m_iWindowWidth, m_iWindowHeight);
@@ -63,7 +65,7 @@ bool OpenGLRenderer::_initGLAD() {
 
 void OpenGLRenderer::frame(Game* game) const {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	game->frame();
 	glfwSwapBuffers(m_window);
 	glfwPollEvents();
