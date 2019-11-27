@@ -79,17 +79,30 @@ void ObjectRenderer::render() {
 	GLuint texture = texture_get(m_sTexture.c_str());
 
 	float timeValue = (float) glfwGetTime();
-	glm::mat4 transformMatrix = glm::mat4(1.0f);
-	transformMatrix = m_position * m_rotation * m_scale * transformMatrix;
+
+	glm::mat4 model = m_position * m_rotation * m_scale * glm::mat4(1.0f);
+
+	glm::mat4 view = glm::mat4(1.0f);
+	glm::mat4 projection;
+	// note that we're translating the scene in the reverse direction of where we want to move
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
+	projection = glm::perspective(glm::radians(55.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+	// To make an ortho projection
+	//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
+	//projection = glm::ortho(0.0f, 2.0f, 0.0f, 2.0f, 0.1f, 100.0f);
 
 	int timeLocation = glGetUniformLocation(shaderProgram, "currentTime");
-	int transformLocation = glGetUniformLocation(shaderProgram, "transform");
+	int transformLocation = glGetUniformLocation(shaderProgram, "model");
+	int viewLocation = glGetUniformLocation(shaderProgram, "view");
+	int projectionLocation = glGetUniformLocation(shaderProgram, "projection");
 
 	glUseProgram(shaderProgram);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
 	glUniform1f(timeLocation, timeValue);
-	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(transformMatrix));
+	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
 
 	glBindVertexArray(m_iVAO);
 	// TODO The mode should be configurable
