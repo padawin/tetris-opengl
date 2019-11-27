@@ -9,9 +9,9 @@ void GameObject::update() {
 	}
 }
 
-void GameObject::render() {
+void GameObject::render(std::shared_ptr<Camera> camera) {
 	if (m_renderer != 0) {
-		m_renderer->render();
+		m_renderer->render(camera);
 	}
 }
 

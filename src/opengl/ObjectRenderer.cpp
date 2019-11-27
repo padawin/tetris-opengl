@@ -74,22 +74,18 @@ void ObjectRenderer::setPosition(float x, float y, float z) {
 	m_position = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
 }
 
-void ObjectRenderer::render() {
+//void ObjectRenderer::render(std::shared_ptr<Camera> camera  __attribute__((unused))) {
+void ObjectRenderer::render(std::shared_ptr<Camera> camera) {
 	GLuint shaderProgram = shader_getProgram(m_sShaderProgram.c_str());
 	GLuint texture = texture_get(m_sTexture.c_str());
 
 	float timeValue = (float) glfwGetTime();
 
 	glm::mat4 model = m_position * m_rotation * m_scale * glm::mat4(1.0f);
-
-	glm::mat4 view = glm::mat4(1.0f);
-	glm::mat4 projection;
-	// note that we're translating the scene in the reverse direction of where we want to move
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
-	projection = glm::perspective(glm::radians(55.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-	// To make an ortho projection
-	//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
-	//projection = glm::ortho(0.0f, 2.0f, 0.0f, 2.0f, 0.1f, 100.0f);
+	// note that we're translating the scene in the reverse direction of where
+	// we want to move
+	glm::mat4 view = glm::translate(glm::mat4(1.0f), -camera->getPosition());
+	glm::mat4 projection = camera->getProjection();
 
 	int timeLocation = glGetUniformLocation(shaderProgram, "currentTime");
 	int transformLocation = glGetUniformLocation(shaderProgram, "model");

@@ -58,6 +58,6 @@ void GameScene::update(StateMachine<SceneState> &stateMachine) {
 
 void GameScene::render() {
 	for (auto object : m_vObjects) {
-		object->render();
+		object->render(m_camera);
 	}
 }
