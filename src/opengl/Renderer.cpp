@@ -1,4 +1,5 @@
 #include "Renderer.hpp"
+#include "mouse.hpp"
 #include "game/Game.hpp"
 #include <iostream>
 #include <errno.h>
@@ -51,6 +52,8 @@ bool OpenGLRenderer::_createWindow() {
 		return false;
 	}
 	glfwMakeContextCurrent(m_window);
+	glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetCursorPosCallback(m_window, mouse_callback);
 	return true;
 }
 
