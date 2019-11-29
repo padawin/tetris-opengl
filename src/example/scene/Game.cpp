@@ -22,10 +22,10 @@ bool GameScene::onEnter() {
 	m_vObjects.push_back(rectangle);
 	m_vObjects.push_back(triangle);
 	setCamera(std::shared_ptr<Camera>(new PerspectiveCamera(45.0f, 800.0f / 600.0f, 0.1f, 100.0f)));
-	m_camera->setPosition(glm::vec3(0.0f, 0.7f, 2.0f));
 	// Example for Orthogonal camera:
 	//setCamera(std::shared_ptr<Camera>(new OrthoCamera(0.0f, 2.0f, 0.0f, 2.0f, 0.1f, 100.0f)));
-	m_camera->setPosition(glm::vec3(-1.0f, 0.0f, 5.0f));
+	m_camera->setPositionFromTarget(glm::vec3(0.0f, 0.0f, 2.0f));
+
 	m_camera->setTarget(rectangle);
 	return true;
 }
