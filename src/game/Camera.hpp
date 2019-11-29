@@ -2,18 +2,20 @@
 #define __CAMERA__
 
 #include <glm/glm.hpp>
-//#include "GameObject.hpp"
+#include <memory>
+
+class GameObject;
 
 class Camera {
 	private:
-	//GameObject *m_target = 0;
+	std::shared_ptr<GameObject> m_target = nullptr;
 	glm::vec3 m_position;
 	glm::mat4 m_view;
 
 	public:
 	Camera();
 	virtual ~Camera() {}
-	//void setTarget(GameObject *target);
+	void setTarget(std::shared_ptr<GameObject> target);
 
 	virtual void update();
 
