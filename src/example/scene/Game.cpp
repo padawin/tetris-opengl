@@ -22,10 +22,11 @@ bool GameScene::onEnter() {
 	m_vObjects.push_back(rectangle);
 	m_vObjects.push_back(triangle);
 	setCamera(std::shared_ptr<Camera>(new PerspectiveCamera(45.0f, 800.0f / 600.0f, 0.1f, 100.0f)));
-	m_camera->setPosition(glm::vec3(0.0f, 0.7f, 2.0f));
 	// Example for Orthogonal camera:
 	//setCamera(std::shared_ptr<Camera>(new OrthoCamera(0.0f, 2.0f, 0.0f, 2.0f, 0.1f, 100.0f)));
-	//m_camera->setPosition(glm::vec3(-1.0f, 0.0f, 20.0f));
+	m_camera->setPositionFromTarget(glm::vec3(0.0f, 0.0f, 2.0f));
+
+	m_camera->setTarget(rectangle);
 	return true;
 }
 
@@ -37,9 +38,10 @@ void GameScene::update(StateMachine<SceneState> &stateMachine) {
 
 	const float playerSpeedX = 0.01f;
 	const float playerSpeedY = 0.01f;
-	float playerX = m_player->getX();
-	float playerY = m_player->getY();
-	float playerZ = m_player->getZ();
+	glm::vec3 playerPosition = m_player->getPosition();
+	float playerX = playerPosition.x;
+	float playerY = playerPosition.y;
+	float playerZ = playerPosition.z;
 	if (m_userActions.getActionState("RIGHT")) {
 		playerX += playerSpeedX;
 	} else if (m_userActions.getActionState("LEFT")) {
@@ -50,7 +52,8 @@ void GameScene::update(StateMachine<SceneState> &stateMachine) {
 	} else if (m_userActions.getActionState("DOWN")) {
 		playerY -= playerSpeedY;
 	}
-	m_player->setPos(playerX, playerY, playerZ);
+	m_player->setPosition(playerX, playerY, playerZ);
+	m_camera->update();
 	for (auto object : m_vObjects) {
 		object->update();
 	}
