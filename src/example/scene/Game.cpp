@@ -30,13 +30,14 @@ bool GameScene::onEnter() {
 }
 
 void GameScene::update(StateMachine<SceneState> &stateMachine) {
+	_update();
 	if (m_userActions.getActionState("QUIT")) {
 		stateMachine.clean();
 		return;
 	}
 
-	const float playerSpeedX = 0.01f;
-	const float playerSpeedY = 0.01f;
+	const float playerSpeedX = 1.00f * m_fDeltaTime;
+	const float playerSpeedY = 1.00f * m_fDeltaTime;
 	glm::vec3 playerPosition = m_player->getPosition();
 	float playerX = playerPosition.x;
 	float playerY = playerPosition.y;
