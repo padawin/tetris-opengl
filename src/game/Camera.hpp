@@ -3,31 +3,16 @@
 
 #include <glm/glm.hpp>
 #include <memory>
-
-class GameObject;
+#include "CameraView.hpp"
 
 class Camera {
 	private:
-	std::shared_ptr<GameObject> m_target = nullptr;
-	glm::vec3 m_position;
-	glm::vec3 m_positionFromTarget;
-	glm::mat4 m_view;
-	bool m_bFixed = false;
-
-	void _updatePosition();
-	void _updateView();
+	std::shared_ptr<CameraView> m_view;
 
 	public:
-	Camera();
+	Camera(std::shared_ptr<CameraView> view);
 	virtual ~Camera() {}
-	void setTarget(std::shared_ptr<GameObject> target);
 
-	virtual void update();
-
-	virtual void setPosition(glm::vec3 position);
-	virtual void setPositionFromTarget(glm::vec3 position);
-	virtual void setFixed(bool isFixed);
-	glm::vec3 getPosition() const;
 	glm::mat4 getView() const;
 
 	virtual glm::mat4 getProjection() const = 0;
