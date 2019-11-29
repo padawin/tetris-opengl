@@ -2,6 +2,7 @@
 #include "example/Triangle.hpp"
 #include "example/Rectangle.hpp"
 #include "opengl/PerspectiveCamera.hpp"
+#include "game/cameraView/Follow.hpp"
 #include <iostream>
 
 std::string GameScene::getStateID() const {
@@ -21,12 +22,10 @@ bool GameScene::onEnter() {
 	m_player = rectangle;
 	m_vObjects.push_back(rectangle);
 	m_vObjects.push_back(triangle);
-	setCamera(std::shared_ptr<Camera>(new PerspectiveCamera(45.0f, 800.0f / 600.0f, 0.1f, 100.0f)));
-	// Example for Orthogonal camera:
-	//setCamera(std::shared_ptr<Camera>(new OrthoCamera(0.0f, 2.0f, 0.0f, 2.0f, 0.1f, 100.0f)));
-	m_camera->setPositionFromTarget(glm::vec3(0.0f, 0.0f, 2.0f));
+	setCameraView(std::shared_ptr<CameraView>(new FollowView(rectangle, (glm::vec3(0.0f, 0.0f, 3.0f)))));
+	//setCameraView(std::shared_ptr<CameraView>(new FixedView(glm::vec3(0.0f, 0.0f, -1.0f))));
 
-	m_camera->setTarget(rectangle);
+	setCamera(std::shared_ptr<Camera>(new PerspectiveCamera(m_cameraView, 45.0f, 800.0f / 600.0f, 0.1f, 100.0f)));
 	return true;
 }
 
@@ -53,7 +52,7 @@ void GameScene::update(StateMachine<SceneState> &stateMachine) {
 		playerY -= playerSpeedY;
 	}
 	m_player->setPosition(playerX, playerY, playerZ);
-	m_camera->update();
+	m_cameraView->update();
 	for (auto object : m_vObjects) {
 		object->update();
 	}
