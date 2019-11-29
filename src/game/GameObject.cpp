@@ -3,9 +3,9 @@
 
 void GameObject::update() {
 	if (m_renderer != 0) {
-		m_renderer->setPosition(m_iX, m_iY, m_iZ);
-		m_renderer->setRotation(m_iAngleX, m_iAngleY, m_iAngleZ);
-		m_renderer->setScale(m_iScaleX, m_iScaleY, m_iScaleZ);
+		m_renderer->setPosition(m_position.x, m_position.y, m_position.z);
+		m_renderer->setRotation(m_angle.x, m_angle.y, m_angle.z);
+		m_renderer->setScale(m_scale.x, m_scale.y, m_scale.z);
 	}
 }
 
@@ -15,20 +15,10 @@ void GameObject::render(std::shared_ptr<Camera> camera) {
 	}
 }
 
-void GameObject::setPos(float x, float y, float z) {
-	m_iX = x;
-	m_iY = y;
-	m_iZ = z;
+void GameObject::setPosition(float x, float y, float z) {
+	m_position = glm::vec3(x, y, z);
 }
 
-float GameObject::getX() const {
-	return m_iX;
-}
-
-float GameObject::getY() const {
-	return m_iY;
-}
-
-float GameObject::getZ() const {
-	return m_iZ;
+glm::vec3 GameObject::getPosition() const {
+	return m_position;
 }

@@ -37,9 +37,10 @@ void GameScene::update(StateMachine<SceneState> &stateMachine) {
 
 	const float playerSpeedX = 0.01f;
 	const float playerSpeedY = 0.01f;
-	float playerX = m_player->getX();
-	float playerY = m_player->getY();
-	float playerZ = m_player->getZ();
+	glm::vec3 playerPosition = m_player->getPosition();
+	float playerX = playerPosition.x;
+	float playerY = playerPosition.y;
+	float playerZ = playerPosition.z;
 	if (m_userActions.getActionState("RIGHT")) {
 		playerX += playerSpeedX;
 	} else if (m_userActions.getActionState("LEFT")) {
@@ -50,7 +51,7 @@ void GameScene::update(StateMachine<SceneState> &stateMachine) {
 	} else if (m_userActions.getActionState("DOWN")) {
 		playerY -= playerSpeedY;
 	}
-	m_player->setPos(playerX, playerY, playerZ);
+	m_player->setPosition(playerX, playerY, playerZ);
 	for (auto object : m_vObjects) {
 		object->update();
 	}
