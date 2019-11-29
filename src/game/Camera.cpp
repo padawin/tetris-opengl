@@ -31,6 +31,10 @@ void Camera::setPositionFromTarget(glm::vec3 position) {
 	m_positionFromTarget = position;
 }
 
+void Camera::setFixed(bool isFixed) {
+	m_bFixed = isFixed;
+}
+
 glm::vec3 Camera::getPosition() const {
 	return m_position;
 }
@@ -40,10 +44,14 @@ glm::mat4 Camera::getView() const {
 }
 
 /**
- * If the camera is not fixed (@TOIMPLEMENT), it needs to move according to its
+ * If the camera is not fixed, it needs to move according to its
  * target (to be always placed in the same place relative to it).
  */
 void Camera::_updatePosition() {
+	if (m_bFixed) {
+		return;
+	}
+
 	m_position = m_positionFromTarget + m_target->getPosition();
 }
 
