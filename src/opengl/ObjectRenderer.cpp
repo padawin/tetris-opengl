@@ -84,7 +84,7 @@ void ObjectRenderer::render(std::shared_ptr<Camera> camera) {
 	glm::mat4 model = m_position * m_rotation * m_scale * glm::mat4(1.0f);
 	// note that we're translating the scene in the reverse direction of where
 	// we want to move
-	glm::mat4 view = glm::translate(glm::mat4(1.0f), -camera->getPosition());
+	glm::mat4 view = camera->getView();
 	glm::mat4 projection = camera->getProjection();
 
 	int timeLocation = glGetUniformLocation(shaderProgram, "currentTime");

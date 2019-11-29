@@ -52,6 +52,7 @@ void GameScene::update(StateMachine<SceneState> &stateMachine) {
 		playerY -= playerSpeedY;
 	}
 	m_player->setPosition(playerX, playerY, playerZ);
+	m_camera->update();
 	for (auto object : m_vObjects) {
 		object->update();
 	}
