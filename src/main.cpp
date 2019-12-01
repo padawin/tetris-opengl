@@ -16,7 +16,7 @@
 #include "opengl/shader.hpp"
 #include "opengl/texture.hpp"
 
-#include "example/scene/Game.hpp"
+#include "tetris/scene/Game.hpp"
 
 const char* WINDOW_TITLE = "Learn OpenGL";
 const int WINDOW_WIDTH = 800;
