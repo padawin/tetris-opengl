@@ -3,13 +3,21 @@
 #include "opengl/ObjectRenderer.hpp"
 
 void Board::init() {
-	int boardTop = BOARD_HEIGHT * CELL_HEIGHT;
 	for (int i = 0; i < BOARD_SIZE; ++i) {
 		m_cells[i].init();
-		int cellX = (i % BOARD_WIDTH) * CELL_WIDTH;
-		int cellY = boardTop - (i / BOARD_WIDTH) * CELL_HEIGHT;
-		m_cells[i].setPosition(m_position.x + (float) cellX, m_position.y + (float) cellY, 0.0f);
+		m_cells[i].setPosition(_getXPosInBoard(i), _getYPosInBoard(i), 0.0f);
 	}
+}
+
+float Board::_getXPosInBoard(int cellIndex) const {
+	int cellX = (cellIndex % BOARD_WIDTH) * CELL_WIDTH;
+	return m_position.x + (float) cellX;
+}
+
+float Board::_getYPosInBoard(int cellIndex) const {
+	int boardTop = BOARD_HEIGHT * CELL_HEIGHT;
+	int cellY = boardTop - (cellIndex / BOARD_WIDTH) * CELL_HEIGHT;
+	return m_position.y + (float) cellY;
 }
 
 void Board::update() {

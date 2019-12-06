@@ -17,6 +17,9 @@ class Board : public GameObject {
 	BoardCell m_cells[BOARD_SIZE];
 	//Piece** m_pieces[BOARD_SIZE];
 
+	float _getXPosInBoard(int cellIndex) const;
+	float _getYPosInBoard(int cellIndex) const;
+
 	public:
 	void init();
 	void update();
