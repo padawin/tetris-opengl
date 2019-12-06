@@ -23,9 +23,13 @@ class Board : public GameObject {
 	BoardCell m_cells[BOARD_SIZE];
 	//Piece** m_pieces[BOARD_SIZE];
 	std::shared_ptr<Piece> m_currentPiece = nullptr;
+	// Coordinates as board cells of the point 0 of the current piece
+	int m_currentPieceCell = 0;
 	BoardState m_state = GENERATE_PIECE;
 
 	void _generatePiece();
+	int _cellToX(int cellIndex) const;
+	int _cellToY(int cellIndex) const;
 	float _getXPosInBoard(int cellIndex) const;
 	float _getYPosInBoard(int cellIndex) const;
 

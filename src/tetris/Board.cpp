@@ -11,15 +11,21 @@ void Board::init() {
 	}
 }
 
+int Board::_cellToX(int cellIndex) const {
+	return (cellIndex % BOARD_WIDTH) * CELL_WIDTH;
+}
+
+int Board::_cellToY(int cellIndex) const {
+	int boardTop = BOARD_HEIGHT * CELL_HEIGHT;
+	return boardTop - (cellIndex / BOARD_WIDTH) * CELL_HEIGHT;
+}
+
 float Board::_getXPosInBoard(int cellIndex) const {
-	int cellX = (cellIndex % BOARD_WIDTH) * CELL_WIDTH;
-	return m_position.x + (float) cellX;
+	return m_position.x + (float) _cellToX(cellIndex);
 }
 
 float Board::_getYPosInBoard(int cellIndex) const {
-	int boardTop = BOARD_HEIGHT * CELL_HEIGHT;
-	int cellY = boardTop - (cellIndex / BOARD_WIDTH) * CELL_HEIGHT;
-	return m_position.y + (float) cellY;
+	return m_position.y + (float) _cellToY(cellIndex);
 }
 
 void Board::update() {
@@ -35,9 +41,19 @@ void Board::update() {
 
 void Board::_generatePiece() {
 	m_currentPiece = std::shared_ptr<Piece>(PieceFactory::create());
+	m_currentPieceCell = BOARD_WIDTH / 2;
+	int currentPieceCellY = _cellToY(m_currentPieceCell);
+	int delta = 0;
+	for (auto block : m_currentPiece->getBlocks()) {
+		int cellY = currentPieceCellY + block.second;
+		if (delta < cellY - BOARD_HEIGHT) {
+			delta = cellY - BOARD_HEIGHT;
+		}
+	}
+	m_currentPieceCell += delta * BOARD_WIDTH;
 	m_currentPiece->setPosition(
-		_getXPosInBoard(BOARD_WIDTH / 2),
-		_getYPosInBoard(0),
+		_getXPosInBoard(m_currentPieceCell),
+		_getYPosInBoard(m_currentPieceCell),
 		0.1f
 	);
 }
