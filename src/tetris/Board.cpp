@@ -6,6 +6,7 @@ void Board::init() {
 	for (int i = 0; i < BOARD_SIZE; ++i) {
 		m_cells[i].init();
 		m_cells[i].setPosition(_getXPosInBoard(i), _getYPosInBoard(i), 0.0f);
+		m_cells[i].update();
 	}
 }
 
@@ -21,9 +22,6 @@ float Board::_getYPosInBoard(int cellIndex) const {
 }
 
 void Board::update() {
-	for (int i = 0; i < BOARD_SIZE; ++i) {
-		m_cells[i].update();
-	}
 }
 
 void Board::render(std::shared_ptr<Camera> camera) {
