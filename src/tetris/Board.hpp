@@ -1,9 +1,9 @@
 #ifndef __BOARD__
 #define __BOARD__
 
-#define BOARD_WIDTH 8
-#define BOARD_HEIGHT 14
-#define BOARD_SIZE 112
+#define BOARD_WIDTH 10
+#define BOARD_HEIGHT 18
+#define BOARD_SIZE 180
 
 #define CELL_WIDTH 1
 #define CELL_HEIGHT 1
