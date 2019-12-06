@@ -5,10 +5,10 @@ void BoltPiece::_create() {
 	// Looks like:
 	//  0#
 	// ##
-	m_vBlockCoordinates.push_back(std::make_pair(-1, -1));
-	m_vBlockCoordinates.push_back(std::make_pair(0, -1));
-	m_vBlockCoordinates.push_back(std::make_pair(0, 0));
-	m_vBlockCoordinates.push_back(std::make_pair(1, 0));
+	m_vBlockCoordinates.push_back({-1, -1});
+	m_vBlockCoordinates.push_back({0, -1});
+	m_vBlockCoordinates.push_back({0, 0});
+	m_vBlockCoordinates.push_back({1, 0});
 }
 
 void BoltPiece::init() {

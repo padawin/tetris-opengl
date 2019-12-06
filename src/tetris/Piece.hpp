@@ -6,13 +6,13 @@
 
 class Piece : public GameObject {
 	protected:
-	std::vector<std::pair<int, int>> m_vBlockCoordinates = {};
+	std::vector<glm::vec2> m_vBlockCoordinates = {};
 
 	virtual void _create() = 0;
 
 	public:
 	virtual ~Piece() {}
-	virtual std::vector<std::pair<int, int>> getBlocks() const;
+	virtual std::vector<glm::vec2> getBlocks() const;
 };
 
 #endif

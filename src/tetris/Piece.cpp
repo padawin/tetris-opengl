@@ -1,5 +1,5 @@
 #include "Piece.hpp"
 
-std::vector<std::pair<int, int>> Piece::getBlocks() const {
+std::vector<glm::vec2> Piece::getBlocks() const {
 	return m_vBlockCoordinates;
 }

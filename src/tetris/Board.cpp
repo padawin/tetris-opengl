@@ -45,7 +45,7 @@ void Board::_generatePiece() {
 	int currentPieceCellY = _cellToY(m_currentPieceCell);
 	int delta = 0;
 	for (auto block : m_currentPiece->getBlocks()) {
-		int cellY = currentPieceCellY + block.second;
+		int cellY = currentPieceCellY + (int) block.y;
 		if (delta < cellY - BOARD_HEIGHT) {
 			delta = cellY - BOARD_HEIGHT;
 		}
