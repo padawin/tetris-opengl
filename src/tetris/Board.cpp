@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Board.hpp"
 #include "opengl/ObjectRenderer.hpp"
+#include "PieceFactory.hpp"
 
 void Board::init() {
 	for (int i = 0; i < BOARD_SIZE; ++i) {
@@ -22,10 +23,30 @@ float Board::_getYPosInBoard(int cellIndex) const {
 }
 
 void Board::update() {
+	if (m_state == GENERATE_PIECE) {
+		_generatePiece();
+		m_state = PIECE_FALLS;
+	}
+
+	if (m_currentPiece != nullptr) {
+		m_currentPiece->update();
+	}
+}
+
+void Board::_generatePiece() {
+	m_currentPiece = std::shared_ptr<Piece>(PieceFactory::create());
+	m_currentPiece->setPosition(
+		_getXPosInBoard(BOARD_WIDTH / 2),
+		_getYPosInBoard(0),
+		0.1f
+	);
 }
 
 void Board::render(std::shared_ptr<Camera> camera) {
 	for (int i = 0; i < BOARD_SIZE; ++i) {
 		m_cells[i].render(camera);
+	}
+	if (m_currentPiece != nullptr) {
+		m_currentPiece->render(camera);
 	}
 }
