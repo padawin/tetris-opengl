@@ -21,5 +21,6 @@ std::shared_ptr<Piece> PieceFactory::create() {
 		piece = std::shared_ptr<Piece>(new SquarePiece());
 	}
 	piece->init();
+	piece->rotate(rand() % 4);
 	return piece;
 }
