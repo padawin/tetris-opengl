@@ -16,7 +16,8 @@ const float TIME_BETWEEN_ACTIONS = 0.75f; // seconds
 
 enum BoardState {
 	GENERATE_PIECE,
-	PIECE_FALLS
+	PIECE_FALLS,
+	REMOVE_FULL_LINES
 };
 
 //class Piece;
@@ -31,6 +32,8 @@ class Board : public GameObject {
 	double m_fLastActionTime = 0.0f;
 
 	void _generatePiece();
+	bool _hasCollisions() const;
+	void _movePieceDown();
 	int _cellToX(int cellIndex) const;
 	int _cellToY(int cellIndex) const;
 	float _getXPosInBoard(int cellIndex) const;

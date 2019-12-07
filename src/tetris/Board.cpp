@@ -37,6 +37,14 @@ void Board::update() {
 		_generatePiece();
 		m_state = PIECE_FALLS;
 	}
+	else if (m_state == PIECE_FALLS) {
+		if (_hasCollisions()) {
+			m_state = REMOVE_FULL_LINES;
+		}
+		else {
+			_movePieceDown();
+		}
+	}
 
 	if (m_currentPiece != nullptr) {
 		m_currentPiece->update();
@@ -56,6 +64,27 @@ void Board::_generatePiece() {
 		}
 	}
 	m_currentPieceCell += delta * BOARD_WIDTH;
+	m_currentPiece->setPosition(
+		_getXPosInBoard(m_currentPieceCell),
+		_getYPosInBoard(m_currentPieceCell),
+		0.1f
+	);
+}
+
+bool Board::_hasCollisions() const {
+	bool collides = false;
+	int currentPieceCellY = _cellToY(m_currentPieceCell);
+	for (auto block : m_currentPiece->getBlocks()) {
+		int cellY = currentPieceCellY + (int) block.y - 1;
+		if (cellY < 0) {
+			collides = true;
+		}
+	}
+	return collides;
+}
+
+void Board::_movePieceDown() {
+	m_currentPieceCell += BOARD_WIDTH;
 	m_currentPiece->setPosition(
 		_getXPosInBoard(m_currentPieceCell),
 		_getYPosInBoard(m_currentPieceCell),
