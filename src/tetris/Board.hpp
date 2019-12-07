@@ -12,6 +12,8 @@
 #include "BoardCell.hpp"
 #include "Piece.hpp"
 
+const float TIME_BETWEEN_ACTIONS = 0.75f; // seconds
+
 enum BoardState {
 	GENERATE_PIECE,
 	PIECE_FALLS
@@ -26,6 +28,7 @@ class Board : public GameObject {
 	// Coordinates as board cells of the point 0 of the current piece
 	int m_currentPieceCell = 0;
 	BoardState m_state = GENERATE_PIECE;
+	double m_fLastActionTime = 0.0f;
 
 	void _generatePiece();
 	int _cellToX(int cellIndex) const;

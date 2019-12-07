@@ -1,4 +1,5 @@
 #include <iostream>
+#include <GLFW/glfw3.h>
 #include "Board.hpp"
 #include "opengl/ObjectRenderer.hpp"
 #include "PieceFactory.hpp"
@@ -29,6 +30,9 @@ float Board::_getYPosInBoard(int cellIndex) const {
 }
 
 void Board::update() {
+	if (glfwGetTime() - m_fLastActionTime < TIME_BETWEEN_ACTIONS) {
+		return;
+	}
 	if (m_state == GENERATE_PIECE) {
 		_generatePiece();
 		m_state = PIECE_FALLS;
@@ -37,6 +41,7 @@ void Board::update() {
 	if (m_currentPiece != nullptr) {
 		m_currentPiece->update();
 	}
+	m_fLastActionTime = glfwGetTime();
 }
 
 void Board::_generatePiece() {
