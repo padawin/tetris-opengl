@@ -17,8 +17,7 @@ int Board::_getGridX(int cellIndex) const {
 }
 
 int Board::_getGridY(int cellIndex) const {
-	int boardTop = BOARD_HEIGHT * CELL_HEIGHT;
-	return boardTop - cellIndex / BOARD_WIDTH;
+	return cellIndex / BOARD_WIDTH;
 }
 
 float Board::_getWorldX(int cellIndex) const {
@@ -54,16 +53,19 @@ void Board::update() {
 
 void Board::_generatePiece() {
 	m_currentPiece = std::shared_ptr<Piece>(PieceFactory::create());
-	m_currentPieceCell = BOARD_WIDTH / 2;
+	m_currentPieceCell = BOARD_SIZE - BOARD_WIDTH / 2;
 	int currentPieceCellY = _getGridY(m_currentPieceCell);
-	int delta = 0;
+	int maxDistanceFromTop = 0;
+	int topRow = BOARD_HEIGHT - 1;
 	for (auto block : m_currentPiece->getBlocks()) {
 		int cellY = currentPieceCellY + block.y;
-		if (delta < cellY - BOARD_HEIGHT) {
-			delta = cellY - BOARD_HEIGHT;
+		int distanceFromTop = cellY - topRow;
+		if (distanceFromTop > maxDistanceFromTop) {
+			maxDistanceFromTop = distanceFromTop;
 		}
 	}
-	m_currentPieceCell += delta * BOARD_WIDTH;
+	// Move the piece down so that it in not out of the board
+	m_currentPieceCell -= maxDistanceFromTop * BOARD_WIDTH;
 	m_currentPiece->setPosition(
 		_getWorldX(m_currentPieceCell),
 		_getWorldY(m_currentPieceCell),
@@ -84,7 +86,7 @@ bool Board::_hasCollisions() const {
 }
 
 void Board::_movePieceDown() {
-	m_currentPieceCell += BOARD_WIDTH;
+	m_currentPieceCell -= BOARD_WIDTH;
 	m_currentPiece->setPosition(
 		_getWorldX(m_currentPieceCell),
 		_getWorldY(m_currentPieceCell),
