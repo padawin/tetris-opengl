@@ -50,8 +50,8 @@ void BarPiece::init() {
 	ObjectRenderer *renderer = (ObjectRenderer *) m_renderer.get();
 
 	renderer->init();
-	renderer->setShaderProgram("default");
-	renderer->setTexture("lblock.png");
+	renderer->setShaderProgram("bar");
+	renderer->setTexture("piece.png");
 	renderer->setVertices(
 		vertices,
 		indices,

@@ -17,8 +17,8 @@ void BoardCell::init() {
 	ObjectRenderer *renderer = (ObjectRenderer *) m_renderer.get();
 
 	renderer->init();
-	renderer->setShaderProgram("default");
-	renderer->setTexture("cell.png");
+	renderer->setShaderProgram("boardcell");
+	renderer->setTexture("piece.png");
 	renderer->setVertices(
 		vertices,
 		indices,
