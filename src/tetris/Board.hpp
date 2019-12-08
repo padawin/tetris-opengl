@@ -33,6 +33,7 @@ class Board : public GameObject {
 
 	void _generatePiece();
 	bool _hasCollisions() const;
+	void _createPlacedPieces();
 	void _movePieceDown();
 	int _getGridX(int cellIndex) const;
 	int _getGridY(int cellIndex) const;

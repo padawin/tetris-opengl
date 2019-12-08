@@ -38,6 +38,7 @@ void Board::update() {
 	}
 	else if (m_state == PIECE_FALLS) {
 		if (_hasCollisions()) {
+			_createPlacedPieces();
 			m_state = REMOVE_FULL_LINES;
 		}
 		else {
@@ -86,6 +87,20 @@ bool Board::_hasCollisions() const {
 		}
 	}
 	return collides;
+}
+
+void Board::_createPlacedPieces() {
+	for (auto block : m_currentPiece->getBlocks()) {
+		int pieceCell = m_currentPieceCell + block.x + block.y * BOARD_WIDTH;
+		m_pieces[pieceCell] = std::shared_ptr<Piece>(PieceFactory::createPlaced());
+		m_pieces[pieceCell]->setPosition(
+			_getWorldX(pieceCell),
+			_getWorldY(pieceCell),
+			0.1f
+		);
+		m_pieces[pieceCell]->update();
+	}
+	m_currentPiece = nullptr;
 }
 
 void Board::_movePieceDown() {

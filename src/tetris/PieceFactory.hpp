@@ -7,6 +7,7 @@
 class PieceFactory {
 	public:
 	static std::shared_ptr<Piece> create();
+	static std::shared_ptr<Piece> createPlaced();
 };
 
 #endif
