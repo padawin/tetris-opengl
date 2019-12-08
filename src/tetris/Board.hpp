@@ -35,7 +35,8 @@ class Board : public GameObject {
 	bool m_bTurbo = false;
 
 	void _generatePiece();
-	bool _hasCollisions(int pieceCell) const;
+	bool _collides(unsigned int directions) const;
+	bool _isValid(int x, int y) const;
 	void _createPlacedPieces();
 	void _movePieceDown();
 	int _getGridX(int cellIndex) const;

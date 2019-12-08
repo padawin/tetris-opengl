@@ -4,6 +4,10 @@
 #include "opengl/ObjectRenderer.hpp"
 #include "PieceFactory.hpp"
 
+const unsigned int DIRECTION_DOWN = 0x01;
+const unsigned int DIRECTION_LEFT = 0x02;
+const unsigned int DIRECTION_RIGHT = 0x04;
+
 void Board::init() {
 	for (int i = 0; i < BOARD_SIZE; ++i) {
 		m_cells[i].init();
@@ -40,7 +44,7 @@ void Board::update() {
 			m_state = PIECE_FALLS;
 		}
 		else if (m_state == PIECE_FALLS) {
-			if (_hasCollisions(m_currentPieceCell)) {
+			if (_collides(DIRECTION_DOWN)) {
 				_createPlacedPieces();
 				m_state = REMOVE_FULL_LINES;
 			}
@@ -78,19 +82,29 @@ void Board::_generatePiece() {
 	);
 }
 
-bool Board::_hasCollisions(int pieceCell) const {
-	bool collides = false;
-	int currentPieceCellX = _getGridX(pieceCell);
-	int currentPieceCellY = _getGridY(pieceCell);
+bool Board::_collides(unsigned int directions) const {
+	int currentPieceX = _getGridX(m_currentPieceCell);
+	int currentPieceY = _getGridY(m_currentPieceCell);
+	int isDown = directions & DIRECTION_DOWN;
+	int isLeft = directions & DIRECTION_LEFT;
+	int isRight = directions & DIRECTION_RIGHT;
 	for (auto block : m_currentPiece->getBlocks()) {
-		int cellX = currentPieceCellX + block.x;
-		int cellY = currentPieceCellY + block.y - 1;
-		int cellIndex = cellY * BOARD_WIDTH + cellX;
-		if (cellY < 0 || m_pieces[cellIndex] != nullptr) {
-			collides = true;
+		if ((isDown && !_isValid(currentPieceX + block.x, currentPieceY + block.y - 1))
+			|| (isLeft && !_isValid(currentPieceX + block.x - 1, currentPieceY + block.y))
+			|| (isRight && !_isValid(currentPieceX + block.x + 1, currentPieceY + block.y))
+		) {
+			return true;
 		}
 	}
-	return collides;
+	return false;
+}
+
+bool Board::_isValid(int x, int y) const {
+	if (x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT) {
+	   return false;
+	}
+	int cellIndex = y * BOARD_WIDTH + x;
+	return m_pieces[cellIndex] == nullptr;
 }
 
 void Board::_createPlacedPieces() {
