@@ -13,6 +13,7 @@
 #include "Piece.hpp"
 
 const float TIME_BETWEEN_ACTIONS = 0.75f; // seconds
+const float TURBO_TIME_BETWEEN_ACTIONS = 0.05f; // seconds
 
 enum BoardState {
 	GENERATE_PIECE,
@@ -30,6 +31,7 @@ class Board : public GameObject {
 	int m_currentPieceCell = 0;
 	BoardState m_state = GENERATE_PIECE;
 	double m_fLastActionTime = 0.0f;
+	bool m_bTurbo = false;
 
 	void _generatePiece();
 	bool _hasCollisions() const;
@@ -44,6 +46,8 @@ class Board : public GameObject {
 	void init();
 	void update();
 	void render(std::shared_ptr<Camera> camera);
+
+	void setTurbo(bool turbo);
 };
 
 #endif

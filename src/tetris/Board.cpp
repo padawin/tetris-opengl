@@ -29,7 +29,8 @@ float Board::_getWorldY(int cellIndex) const {
 }
 
 void Board::update() {
-	if (glfwGetTime() - m_fLastActionTime < TIME_BETWEEN_ACTIONS) {
+	double timeBetweenActions = m_bTurbo ? TURBO_TIME_BETWEEN_ACTIONS : TIME_BETWEEN_ACTIONS;
+	if (glfwGetTime() - m_fLastActionTime < timeBetweenActions) {
 		return;
 	}
 	if (m_state == GENERATE_PIECE) {
@@ -124,4 +125,8 @@ void Board::render(std::shared_ptr<Camera> camera) {
 	if (m_currentPiece != nullptr) {
 		m_currentPiece->render(camera);
 	}
+}
+
+void Board::setTurbo(bool turbo) {
+	m_bTurbo = turbo;
 }

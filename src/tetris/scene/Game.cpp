@@ -28,6 +28,7 @@ void GameScene::update(StateMachine<SceneState> &stateMachine) {
 		stateMachine.clean();
 		return;
 	}
+	m_board.setTurbo(m_userActions.getActionState("TURBO"));
 	m_cameraView->update();
 	m_board.update();
 }
