@@ -16,7 +16,8 @@
 enum BoardState {
 	GENERATE_PIECE,
 	PIECE_FALLS,
-	REMOVE_FULL_LINES
+	REMOVE_FULL_LINES,
+	MOVE_PIECES_DOWN
 };
 
 //class Piece;
@@ -42,6 +43,9 @@ class Board : public GameObject {
 	float _getWorldX(int cellIndex) const;
 	float _getWorldY(int cellIndex) const;
 	void _movePiece(int direction);
+	bool _hasFullLines() const;
+	void _removeFullLines();
+	void _groupBlocks();
 
 	public:
 	void init();

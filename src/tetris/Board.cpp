@@ -69,6 +69,19 @@ void Board::update() {
 				_movePieceDown();
 			}
 		}
+		else if (m_state == REMOVE_FULL_LINES) {
+			if (_hasFullLines()) {
+				_removeFullLines();
+				m_state = MOVE_PIECES_DOWN;
+			}
+			else {
+				m_state = GENERATE_PIECE;
+			}
+		}
+		else if (m_state == MOVE_PIECES_DOWN) {
+			_groupBlocks();
+			m_state = GENERATE_PIECE;
+		}
 		m_fLastActionTime = glfwGetTime();
 	}
 
@@ -180,4 +193,76 @@ void Board::_movePiece(int direction) {
 		_getWorldY(m_currentPieceCell),
 		0.1f
 	);
+}
+
+bool Board::_hasFullLines() const {
+	for (int line = 0; line < BOARD_HEIGHT; line++) {
+		bool lineIsFull = true;
+		for (int column = 0; column < BOARD_WIDTH; column++) {
+			int cellIndex = line * BOARD_WIDTH + column;
+			if (m_pieces[cellIndex] == nullptr) {
+				lineIsFull = false;
+				break;
+			}
+		}
+		if (lineIsFull) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void Board::_removeFullLines() {
+	for (int line = 0; line < BOARD_HEIGHT; line++) {
+		bool lineIsFull = true;
+		for (int column = 0; column < BOARD_WIDTH; column++) {
+			int cellIndex = line * BOARD_WIDTH + column;
+			if (m_pieces[cellIndex] == nullptr) {
+				lineIsFull = false;
+				break;
+			}
+		}
+		if (lineIsFull) {
+			for (int column = 0; column < BOARD_WIDTH; column++) {
+				int cellIndex = line * BOARD_WIDTH + column;
+				m_pieces[cellIndex] = nullptr;
+			}
+		}
+	}
+}
+
+void Board::_groupBlocks() {
+	int currY = 0;
+	for (int line = 0; line < BOARD_HEIGHT; line++) {
+		bool lineIsEmpty = true;
+		for (int column = 0; column < BOARD_WIDTH; column++) {
+			int cellIndex = line * BOARD_WIDTH + column;
+			if (m_pieces[cellIndex] != nullptr) {
+				lineIsEmpty = false;
+				break;
+			}
+		}
+		if (!lineIsEmpty) {
+			for (int column = 0; column < BOARD_WIDTH; column++) {
+				int oldCellIndex = line * BOARD_WIDTH + column;
+				int newCellIndex = currY * BOARD_WIDTH + column;
+				m_pieces[newCellIndex] = m_pieces[oldCellIndex];
+				if (m_pieces[newCellIndex] != nullptr) {
+					m_pieces[newCellIndex]->setPosition(
+						_getWorldX(newCellIndex),
+						_getWorldY(newCellIndex),
+						0.1f
+					);
+					m_pieces[newCellIndex]->update();
+				}
+			}
+			currY++;
+		}
+	}
+	for (; currY < BOARD_HEIGHT; currY++) {
+		for (int column = 0; column < BOARD_WIDTH; column++) {
+				int newCellIndex = currY * BOARD_WIDTH + column;
+				m_pieces[newCellIndex] = nullptr;
+		}
+	}
 }
