@@ -1,6 +1,2 @@
 default default.vert default.frag
-l default.vert l.frag
-square default.vert square.frag
-bolt default.vert bolt.frag
-bar default.vert bar.frag
 boardcell default.vert boardcell.frag

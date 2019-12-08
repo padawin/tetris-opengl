@@ -12,27 +12,30 @@ void BoltPiece::_create() {
 }
 
 void BoltPiece::init() {
+	float r = 0.915f,
+		  g = 0.866f,
+		  b = 0.209f;
 	float vertices[] = {
-		// vertices        // texture
-		 0.5f, 0.5f, 0.0f, 1.0f, 1.0f, // top right
-		-0.5f, 0.5f, 0.0f, 0.0f, 1.0f, // top left
-		 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
-		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
+		// vertices        // texture  // color
+		 0.5f, 0.5f, 0.0f, 1.0f, 1.0f, r, g, b, // top right
+		-0.5f, 0.5f, 0.0f, 0.0f, 1.0f, r, g, b, // top left
+		 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, r, g, b, // bottom right
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, r, g, b, // bottom left
 
-		 1.5f, 0.5f, 0.0f, 1.0f, 1.0f, // top right
-		 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, // top left
-		 1.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
-		 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
+		 1.5f, 0.5f, 0.0f, 1.0f, 1.0f, r, g, b, // top right
+		 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, r, g, b, // top left
+		 1.5f, -0.5f, 0.0f, 1.0f, 0.0f, r, g, b, // bottom right
+		 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, r, g, b, // bottom left
 
-		 0.5f, -0.5f, 0.0f, 1.0f, 1.0f, // top right
-		-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // top left
-		 0.5f, -1.5f, 0.0f, 1.0f, 0.0f, // bottom right
-		-0.5f, -1.5f, 0.0f, 0.0f, 0.0f, // bottom left
+		 0.5f, -0.5f, 0.0f, 1.0f, 1.0f, r, g, b, // top right
+		-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, r, g, b, // top left
+		 0.5f, -1.5f, 0.0f, 1.0f, 0.0f, r, g, b, // bottom right
+		-0.5f, -1.5f, 0.0f, 0.0f, 0.0f, r, g, b, // bottom left
 
-		-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, // top right
-		-1.5f, -0.5f, 0.0f, 0.0f, 1.0f, // top left
-		-0.5f, -1.5f, 0.0f, 1.0f, 0.0f, // bottom right
-		-1.5f, -1.5f, 0.0f, 0.0f, 0.0f, // bottom left
+		-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, r, g, b, // top right
+		-1.5f, -0.5f, 0.0f, 0.0f, 1.0f, r, g, b, // top left
+		-0.5f, -1.5f, 0.0f, 1.0f, 0.0f, r, g, b, // bottom right
+		-1.5f, -1.5f, 0.0f, 0.0f, 0.0f, r, g, b, // bottom left
 
 	};
 	unsigned int indices[] = {  // note that we start from 0!
@@ -52,7 +55,7 @@ void BoltPiece::init() {
 	ObjectRenderer *renderer = (ObjectRenderer *) m_renderer.get();
 
 	renderer->init();
-	renderer->setShaderProgram("bolt");
+	renderer->setShaderProgram("default");
 	renderer->setTexture("piece.png");
 	renderer->setVertices(
 		vertices,

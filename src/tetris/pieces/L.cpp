@@ -12,27 +12,30 @@ void LPiece::_create() {
 }
 
 void LPiece::init() {
+	float r = 0.1f,
+		  g = 0.66f,
+		  b = 0.71f;
 	float vertices[] = {
-		// vertices        // texture
-		 0.5f, 0.5f, 0.0f, 1.0f, 1.0f, // top right
-		-0.5f, 0.5f, 0.0f, 0.0f, 1.0f, // top left
-		 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
-		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
+		// vertices        // texture  // color
+		 0.5f, 0.5f, 0.0f, 1.0f, 1.0f, r, g, b, // top right
+		-0.5f, 0.5f, 0.0f, 0.0f, 1.0f, r, g, b, // top left
+		 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, r, g, b, // bottom right
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, r, g, b, // bottom left
 
-		-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, // top right
-		-1.5f, 0.5f, 0.0f, 0.0f, 1.0f, // top left
-		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
-		-1.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
+		-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, r, g, b, // top right
+		-1.5f, 0.5f, 0.0f, 0.0f, 1.0f, r, g, b, // top left
+		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, r, g, b, // bottom right
+		-1.5f, -0.5f, 0.0f, 0.0f, 0.0f, r, g, b, // bottom left
 
-		 1.5f, 0.5f, 0.0f, 1.0f, 1.0f, // top right
-		 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, // top left
-		 1.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
-		 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
+		 1.5f, 0.5f, 0.0f, 1.0f, 1.0f, r, g, b, // top right
+		 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, r, g, b, // top left
+		 1.5f, -0.5f, 0.0f, 1.0f, 0.0f, r, g, b, // bottom right
+		 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, r, g, b, // bottom left
 
-		 1.5f, 1.5f, 0.0f, 1.0f, 1.0f, // top right
-		 0.5f, 1.5f, 0.0f, 0.0f, 1.0f, // top left
-		 1.5f, 0.5f, 0.0f, 1.0f, 0.0f, // bottom right
-		 0.5f, 0.5f, 0.0f, 0.0f, 0.0f  // bottom left
+		 1.5f, 1.5f, 0.0f, 1.0f, 1.0f, r, g, b, // top right
+		 0.5f, 1.5f, 0.0f, 0.0f, 1.0f, r, g, b, // top left
+		 1.5f, 0.5f, 0.0f, 1.0f, 0.0f, r, g, b, // bottom right
+		 0.5f, 0.5f, 0.0f, 0.0f, 0.0f, r, g, b  // bottom left
 	};
 	unsigned int indices[] = {  // note that we start from 0!
 		0, 1, 2,   // first triangle
@@ -51,7 +54,7 @@ void LPiece::init() {
 	ObjectRenderer *renderer = (ObjectRenderer *) m_renderer.get();
 
 	renderer->init();
-	renderer->setShaderProgram("l");
+	renderer->setShaderProgram("default");
 	renderer->setTexture("piece.png");
 	renderer->setVertices(
 		vertices,
