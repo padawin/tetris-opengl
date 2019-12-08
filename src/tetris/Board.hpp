@@ -34,10 +34,10 @@ class Board : public GameObject {
 	void _generatePiece();
 	bool _hasCollisions() const;
 	void _movePieceDown();
-	int _cellToX(int cellIndex) const;
-	int _cellToY(int cellIndex) const;
-	float _getXPosInBoard(int cellIndex) const;
-	float _getYPosInBoard(int cellIndex) const;
+	int _getGridX(int cellIndex) const;
+	int _getGridY(int cellIndex) const;
+	float _getWorldX(int cellIndex) const;
+	float _getWorldY(int cellIndex) const;
 
 	public:
 	void init();

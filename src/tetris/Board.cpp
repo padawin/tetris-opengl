@@ -7,26 +7,26 @@
 void Board::init() {
 	for (int i = 0; i < BOARD_SIZE; ++i) {
 		m_cells[i].init();
-		m_cells[i].setPosition(_getXPosInBoard(i), _getYPosInBoard(i), 0.0f);
+		m_cells[i].setPosition(_getWorldX(i), _getWorldY(i), 0.0f);
 		m_cells[i].update();
 	}
 }
 
-int Board::_cellToX(int cellIndex) const {
+int Board::_getGridX(int cellIndex) const {
 	return (cellIndex % BOARD_WIDTH) * CELL_WIDTH;
 }
 
-int Board::_cellToY(int cellIndex) const {
+int Board::_getGridY(int cellIndex) const {
 	int boardTop = BOARD_HEIGHT * CELL_HEIGHT;
 	return boardTop - (cellIndex / BOARD_WIDTH) * CELL_HEIGHT;
 }
 
-float Board::_getXPosInBoard(int cellIndex) const {
-	return m_position.x + (float) _cellToX(cellIndex);
+float Board::_getWorldX(int cellIndex) const {
+	return m_position.x + (float) _getGridX(cellIndex);
 }
 
-float Board::_getYPosInBoard(int cellIndex) const {
-	return m_position.y + (float) _cellToY(cellIndex);
+float Board::_getWorldY(int cellIndex) const {
+	return m_position.y + (float) _getGridY(cellIndex);
 }
 
 void Board::update() {
@@ -55,7 +55,7 @@ void Board::update() {
 void Board::_generatePiece() {
 	m_currentPiece = std::shared_ptr<Piece>(PieceFactory::create());
 	m_currentPieceCell = BOARD_WIDTH / 2;
-	int currentPieceCellY = _cellToY(m_currentPieceCell);
+	int currentPieceCellY = _getGridY(m_currentPieceCell);
 	int delta = 0;
 	for (auto block : m_currentPiece->getBlocks()) {
 		int cellY = currentPieceCellY + (int) block.y;
@@ -65,15 +65,15 @@ void Board::_generatePiece() {
 	}
 	m_currentPieceCell += delta * BOARD_WIDTH;
 	m_currentPiece->setPosition(
-		_getXPosInBoard(m_currentPieceCell),
-		_getYPosInBoard(m_currentPieceCell),
+		_getWorldX(m_currentPieceCell),
+		_getWorldY(m_currentPieceCell),
 		0.1f
 	);
 }
 
 bool Board::_hasCollisions() const {
 	bool collides = false;
-	int currentPieceCellY = _cellToY(m_currentPieceCell);
+	int currentPieceCellY = _getGridY(m_currentPieceCell);
 	for (auto block : m_currentPiece->getBlocks()) {
 		int cellY = currentPieceCellY + (int) block.y - 1;
 		if (cellY < 0) {
@@ -86,8 +86,8 @@ bool Board::_hasCollisions() const {
 void Board::_movePieceDown() {
 	m_currentPieceCell += BOARD_WIDTH;
 	m_currentPiece->setPosition(
-		_getXPosInBoard(m_currentPieceCell),
-		_getYPosInBoard(m_currentPieceCell),
+		_getWorldX(m_currentPieceCell),
+		_getWorldY(m_currentPieceCell),
 		0.1f
 	);
 }
