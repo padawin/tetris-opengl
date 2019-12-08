@@ -17,8 +17,8 @@ bool GameScene::onEnter() {
 	auto board = std::shared_ptr<GameObject>(new Board());
 	board->init();
 	m_vObjects.push_back(board);
-	setCameraView(std::shared_ptr<CameraView>(new FixedView(glm::vec3(0.0f, 0.3f, -1.0f))));
-	m_cameraView->setPosition(glm::vec3(3.5f, 2.4f, 20.0f));
+	setCameraView(std::shared_ptr<CameraView>(new FixedView(glm::vec3(0.0f, 0.0f, -1.0f))));
+	m_cameraView->setPosition(glm::vec3(4.5f, 8.5f, 22.4f));
 
 	setCamera(std::shared_ptr<Camera>(new PerspectiveCamera(m_cameraView, 45.0f, 800.0f / 600.0f, 0.1f, 100.0f)));
 	return true;
