@@ -28,6 +28,7 @@ class Board : public GameObject {
 	// Coordinates as board cells of the point 0 of the current piece
 	int m_currentPieceCell = 0;
 	BoardState m_state = GENERATE_PIECE;
+	double m_fLastUserActionTime = 0.0f;
 	double m_fLastActionTime = 0.0f;
 	bool m_bTurbo = false;
 
@@ -40,6 +41,7 @@ class Board : public GameObject {
 	int _getGridY(int cellIndex) const;
 	float _getWorldX(int cellIndex) const;
 	float _getWorldY(int cellIndex) const;
+	void _movePiece(int direction);
 
 	public:
 	void init();

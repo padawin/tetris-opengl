@@ -4,6 +4,7 @@
 #include "opengl/ObjectRenderer.hpp"
 #include "PieceFactory.hpp"
 
+const float TIME_BETWEEN_USER_ACTIONS = 0.1f; // seconds
 const float TIME_BETWEEN_ACTIONS = 0.75f; // seconds
 const float TURBO_TIME_BETWEEN_ACTIONS = 0.05f; // seconds
 
@@ -37,6 +38,19 @@ float Board::_getWorldY(int cellIndex) const {
 
 void Board::handleUserEvents(UserActions &userActions) {
 	setTurbo(userActions.getActionState("TURBO"));
+	if (glfwGetTime() - m_fLastUserActionTime < TIME_BETWEEN_USER_ACTIONS) {
+		return;
+	}
+
+	if (userActions.getActionState("LEFT")) {
+		_movePiece(-1);
+		m_fLastUserActionTime = glfwGetTime();
+
+	}
+	else if (userActions.getActionState("RIGHT")) {
+		_movePiece(1);
+		m_fLastUserActionTime = glfwGetTime();
+	}
 }
 
 void Board::update() {
@@ -149,4 +163,21 @@ void Board::render(std::shared_ptr<Camera> camera) {
 
 void Board::setTurbo(bool turbo) {
 	m_bTurbo = turbo;
+}
+
+void Board::_movePiece(int direction) {
+	if (m_currentPiece == nullptr) {
+		return;
+	}
+
+	if (_collides(direction == -1 ? DIRECTION_LEFT : DIRECTION_RIGHT)) {
+		return;
+	}
+
+	m_currentPieceCell += direction;
+	m_currentPiece->setPosition(
+		_getWorldX(m_currentPieceCell),
+		_getWorldY(m_currentPieceCell),
+		0.1f
+	);
 }
