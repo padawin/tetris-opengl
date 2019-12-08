@@ -58,7 +58,7 @@ void Board::_generatePiece() {
 	int currentPieceCellY = _getGridY(m_currentPieceCell);
 	int delta = 0;
 	for (auto block : m_currentPiece->getBlocks()) {
-		int cellY = currentPieceCellY + (int) block.y;
+		int cellY = currentPieceCellY + block.y;
 		if (delta < cellY - BOARD_HEIGHT) {
 			delta = cellY - BOARD_HEIGHT;
 		}
@@ -75,7 +75,7 @@ bool Board::_hasCollisions() const {
 	bool collides = false;
 	int currentPieceCellY = _getGridY(m_currentPieceCell);
 	for (auto block : m_currentPiece->getBlocks()) {
-		int cellY = currentPieceCellY + (int) block.y - 1;
+		int cellY = currentPieceCellY + block.y - 1;
 		if (cellY < 0) {
 			collides = true;
 		}

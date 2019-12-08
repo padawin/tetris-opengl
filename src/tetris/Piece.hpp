@@ -14,7 +14,7 @@ class Piece : public GameObject {
 
 	public:
 	virtual ~Piece() {}
-	virtual std::vector<glm::vec2> getBlocks() const;
+	virtual std::vector<glm::ivec2> getBlocks() const;
 	virtual void rotate(int quarter);
 };
 
