@@ -13,20 +13,20 @@ void Board::init() {
 }
 
 int Board::_getGridX(int cellIndex) const {
-	return (cellIndex % BOARD_WIDTH) * CELL_WIDTH;
+	return cellIndex % BOARD_WIDTH;
 }
 
 int Board::_getGridY(int cellIndex) const {
 	int boardTop = BOARD_HEIGHT * CELL_HEIGHT;
-	return boardTop - (cellIndex / BOARD_WIDTH) * CELL_HEIGHT;
+	return boardTop - cellIndex / BOARD_WIDTH;
 }
 
 float Board::_getWorldX(int cellIndex) const {
-	return m_position.x + (float) _getGridX(cellIndex);
+	return m_position.x + (float) _getGridX(cellIndex) * CELL_WIDTH;
 }
 
 float Board::_getWorldY(int cellIndex) const {
-	return m_position.y + (float) _getGridY(cellIndex);
+	return m_position.y + (float) _getGridY(cellIndex) * CELL_HEIGHT;
 }
 
 void Board::update() {
