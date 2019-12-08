@@ -40,7 +40,7 @@ void Board::update() {
 			m_state = PIECE_FALLS;
 		}
 		else if (m_state == PIECE_FALLS) {
-			if (_hasCollisions()) {
+			if (_hasCollisions(m_currentPieceCell)) {
 				_createPlacedPieces();
 				m_state = REMOVE_FULL_LINES;
 			}
@@ -78,10 +78,10 @@ void Board::_generatePiece() {
 	);
 }
 
-bool Board::_hasCollisions() const {
+bool Board::_hasCollisions(int pieceCell) const {
 	bool collides = false;
-	int currentPieceCellX = _getGridX(m_currentPieceCell);
-	int currentPieceCellY = _getGridY(m_currentPieceCell);
+	int currentPieceCellX = _getGridX(pieceCell);
+	int currentPieceCellY = _getGridY(pieceCell);
 	for (auto block : m_currentPiece->getBlocks()) {
 		int cellX = currentPieceCellX + block.x;
 		int cellY = currentPieceCellY + block.y - 1;
