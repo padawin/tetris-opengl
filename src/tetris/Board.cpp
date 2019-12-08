@@ -4,6 +4,9 @@
 #include "opengl/ObjectRenderer.hpp"
 #include "PieceFactory.hpp"
 
+const float TIME_BETWEEN_ACTIONS = 0.75f; // seconds
+const float TURBO_TIME_BETWEEN_ACTIONS = 0.05f; // seconds
+
 const unsigned int DIRECTION_DOWN = 0x01;
 const unsigned int DIRECTION_LEFT = 0x02;
 const unsigned int DIRECTION_RIGHT = 0x04;

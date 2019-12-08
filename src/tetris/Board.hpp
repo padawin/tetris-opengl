@@ -13,9 +13,6 @@
 #include "BoardCell.hpp"
 #include "Piece.hpp"
 
-const float TIME_BETWEEN_ACTIONS = 0.75f; // seconds
-const float TURBO_TIME_BETWEEN_ACTIONS = 0.05f; // seconds
-
 enum BoardState {
 	GENERATE_PIECE,
 	PIECE_FALLS,
