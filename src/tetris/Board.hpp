@@ -24,7 +24,7 @@ enum BoardState {
 class Board : public GameObject {
 	private:
 	BoardCell m_cells[BOARD_SIZE];
-	//Piece** m_pieces[BOARD_SIZE];
+	std::shared_ptr<Piece> m_pieces[BOARD_SIZE];
 	std::shared_ptr<Piece> m_currentPiece = nullptr;
 	// Coordinates as board cells of the point 0 of the current piece
 	int m_currentPieceCell = 0;

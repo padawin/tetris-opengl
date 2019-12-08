@@ -75,10 +75,13 @@ void Board::_generatePiece() {
 
 bool Board::_hasCollisions() const {
 	bool collides = false;
+	int currentPieceCellX = _getGridX(m_currentPieceCell);
 	int currentPieceCellY = _getGridY(m_currentPieceCell);
 	for (auto block : m_currentPiece->getBlocks()) {
+		int cellX = currentPieceCellX + block.x;
 		int cellY = currentPieceCellY + block.y - 1;
-		if (cellY < 0) {
+		int cellIndex = cellY * BOARD_WIDTH + cellX;
+		if (cellY < 0 || m_pieces[cellIndex] != nullptr) {
 			collides = true;
 		}
 	}
@@ -97,6 +100,11 @@ void Board::_movePieceDown() {
 void Board::render(std::shared_ptr<Camera> camera) {
 	for (int i = 0; i < BOARD_SIZE; ++i) {
 		m_cells[i].render(camera);
+	}
+	for (int i = 0; i < BOARD_SIZE; ++i) {
+		if (m_pieces[i] != nullptr) {
+			m_pieces[i]->render(camera);
+		}
 	}
 	if (m_currentPiece != nullptr) {
 		m_currentPiece->render(camera);
