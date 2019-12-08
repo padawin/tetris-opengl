@@ -34,27 +34,26 @@ void Board::handleUserEvents(UserActions &userActions) {
 
 void Board::update() {
 	double timeBetweenActions = m_bTurbo ? TURBO_TIME_BETWEEN_ACTIONS : TIME_BETWEEN_ACTIONS;
-	if (glfwGetTime() - m_fLastActionTime < timeBetweenActions) {
-		return;
-	}
-	if (m_state == GENERATE_PIECE) {
-		_generatePiece();
-		m_state = PIECE_FALLS;
-	}
-	else if (m_state == PIECE_FALLS) {
-		if (_hasCollisions()) {
-			_createPlacedPieces();
-			m_state = REMOVE_FULL_LINES;
+	if (glfwGetTime() - m_fLastActionTime >= timeBetweenActions) {
+		if (m_state == GENERATE_PIECE) {
+			_generatePiece();
+			m_state = PIECE_FALLS;
 		}
-		else {
-			_movePieceDown();
+		else if (m_state == PIECE_FALLS) {
+			if (_hasCollisions()) {
+				_createPlacedPieces();
+				m_state = REMOVE_FULL_LINES;
+			}
+			else {
+				_movePieceDown();
+			}
 		}
+		m_fLastActionTime = glfwGetTime();
 	}
 
 	if (m_currentPiece != nullptr) {
 		m_currentPiece->update();
 	}
-	m_fLastActionTime = glfwGetTime();
 }
 
 void Board::_generatePiece() {
