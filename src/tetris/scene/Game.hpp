@@ -4,13 +4,12 @@
 #include <vector>
 #include <memory>
 #include "game/SceneState.hpp"
-#include "game/GameObject.hpp"
 #include "game/UserActions.hpp"
+#include "tetris/Board.hpp"
 
 class GameScene : public SceneState {
 	private:
-	std::shared_ptr<GameObject> m_player = 0;
-	std::vector<std::shared_ptr<GameObject>> m_vObjects = {};
+	Board m_board;
 
 	public:
 	GameScene(UserActions &userActions);

@@ -1,5 +1,4 @@
 #include "Game.hpp"
-#include "tetris/Board.hpp"
 #include "opengl/PerspectiveCamera.hpp"
 #include "game/cameraView/Fixed.hpp"
 #include <iostream>
@@ -9,14 +8,13 @@ std::string GameScene::getStateID() const {
 }
 
 GameScene::GameScene(UserActions &userActions) :
-	SceneState(userActions)
+	SceneState(userActions),
+	m_board(Board())
 {
 }
 
 bool GameScene::onEnter() {
-	auto board = std::shared_ptr<GameObject>(new Board());
-	board->init();
-	m_vObjects.push_back(board);
+	m_board.init();
 	setCameraView(std::shared_ptr<CameraView>(new FixedView(glm::vec3(0.0f, 0.0f, -1.0f))));
 	m_cameraView->setPosition(glm::vec3(4.5f, 8.5f, 22.4f));
 
@@ -31,13 +29,9 @@ void GameScene::update(StateMachine<SceneState> &stateMachine) {
 		return;
 	}
 	m_cameraView->update();
-	for (auto object : m_vObjects) {
-		object->update();
-	}
+	m_board.update();
 }
 
 void GameScene::render() {
-	for (auto object : m_vObjects) {
-		object->render(m_camera);
-	}
+	m_board.render(m_camera);
 }
