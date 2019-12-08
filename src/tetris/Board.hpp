@@ -8,6 +8,7 @@
 #define CELL_WIDTH 1
 #define CELL_HEIGHT 1
 
+#include "game/UserActions.hpp"
 #include "game/GameObject.hpp"
 #include "BoardCell.hpp"
 #include "Piece.hpp"
@@ -44,6 +45,7 @@ class Board : public GameObject {
 
 	public:
 	void init();
+	void handleUserEvents(UserActions &userActions);
 	void update();
 	void render(std::shared_ptr<Camera> camera);
 

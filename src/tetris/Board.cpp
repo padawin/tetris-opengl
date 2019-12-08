@@ -28,6 +28,10 @@ float Board::_getWorldY(int cellIndex) const {
 	return m_position.y + (float) _getGridY(cellIndex) * CELL_HEIGHT;
 }
 
+void Board::handleUserEvents(UserActions &userActions) {
+	setTurbo(userActions.getActionState("TURBO"));
+}
+
 void Board::update() {
 	double timeBetweenActions = m_bTurbo ? TURBO_TIME_BETWEEN_ACTIONS : TIME_BETWEEN_ACTIONS;
 	if (glfwGetTime() - m_fLastActionTime < timeBetweenActions) {
