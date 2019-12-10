@@ -1,7 +1,8 @@
 #name;type;id
 #name;type;key
 QUIT;0;256
-TURBO;0;32
+TURBO;0;264
+ROTATE;0;32
 RIGHT;0;262
 LEFT;0;263
 DOWN;0;264

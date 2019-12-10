@@ -34,6 +34,7 @@ class Board : public GameObject {
 	double m_fLastPieceSideMove = 0.0f;
 	double m_fLastActionTime = 0.0f;
 	bool m_bTurbo = false;
+	bool m_bRotatedPressed = false;
 
 	void _generatePiece();
 	bool _collides(CollisionType type, unsigned int directions) const;
@@ -45,6 +46,7 @@ class Board : public GameObject {
 	float _getWorldX(int cellIndex) const;
 	float _getWorldY(int cellIndex) const;
 	void _movePiece(int direction);
+	void _rotatePiece(bool rotatePressed);
 	bool _hasFullLines() const;
 	void _removeFullLines();
 	void _groupBlocks();

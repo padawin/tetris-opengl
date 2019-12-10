@@ -39,6 +39,8 @@ float Board::_getWorldY(int cellIndex) const {
 
 void Board::handleUserEvents(UserActions &userActions) {
 	setTurbo(m_state == PIECE_FALLS && userActions.getActionState("TURBO"));
+	_rotatePiece(userActions.getActionState("ROTATE"));
+
 	if (glfwGetTime() - m_fLastPieceSideMove < TIME_BETWEEN_PIECE_SIDE_MOVE) {
 		return;
 	}
@@ -197,6 +199,25 @@ void Board::_movePiece(int direction) {
 		_getWorldY(m_currentPieceCell),
 		0.1f
 	);
+}
+
+void Board::_rotatePiece(bool rotatePressed) {
+	if (m_currentPiece == nullptr) {
+		return;
+	}
+
+	if (!rotatePressed) {
+		m_bRotatedPressed = false;
+		return;
+	}
+
+	if (!m_bRotatedPressed) {
+		m_currentPiece->rotate(1);
+		if (_collides(OVERLAPS, DIRECTION_DOWN | DIRECTION_UP | DIRECTION_LEFT | DIRECTION_RIGHT)) {
+			m_currentPiece->rotate(-1);
+		}
+		m_bRotatedPressed = true;
+	}
 }
 
 bool Board::_hasFullLines() const {
