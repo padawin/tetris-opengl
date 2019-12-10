@@ -37,7 +37,7 @@ float Board::_getWorldY(int cellIndex) const {
 }
 
 void Board::handleUserEvents(UserActions &userActions) {
-	setTurbo(userActions.getActionState("TURBO"));
+	setTurbo(m_state == PIECE_FALLS && userActions.getActionState("TURBO"));
 	if (glfwGetTime() - m_fLastUserActionTime < TIME_BETWEEN_USER_ACTIONS) {
 		return;
 	}
