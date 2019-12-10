@@ -4,7 +4,7 @@
 #include "opengl/ObjectRenderer.hpp"
 #include "PieceFactory.hpp"
 
-const float TIME_BETWEEN_USER_ACTIONS = 0.1f; // seconds
+const float TIME_BETWEEN_PIECE_SIDE_MOVE = 0.1f; // seconds
 const float TIME_BETWEEN_ACTIONS = 0.75f; // seconds
 const float TURBO_TIME_BETWEEN_ACTIONS = 0.05f; // seconds
 
@@ -39,18 +39,18 @@ float Board::_getWorldY(int cellIndex) const {
 
 void Board::handleUserEvents(UserActions &userActions) {
 	setTurbo(m_state == PIECE_FALLS && userActions.getActionState("TURBO"));
-	if (glfwGetTime() - m_fLastUserActionTime < TIME_BETWEEN_USER_ACTIONS) {
+	if (glfwGetTime() - m_fLastPieceSideMove < TIME_BETWEEN_PIECE_SIDE_MOVE) {
 		return;
 	}
 
 	if (userActions.getActionState("LEFT")) {
 		_movePiece(-1);
-		m_fLastUserActionTime = glfwGetTime();
+		m_fLastPieceSideMove = glfwGetTime();
 
 	}
 	else if (userActions.getActionState("RIGHT")) {
 		_movePiece(1);
-		m_fLastUserActionTime = glfwGetTime();
+		m_fLastPieceSideMove = glfwGetTime();
 	}
 }
 
