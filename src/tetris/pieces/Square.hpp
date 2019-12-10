@@ -4,9 +4,6 @@
 #include "../Piece.hpp"
 
 class SquarePiece : public Piece {
-	protected:
-	void _create();
-
 	public:
 	void init();
 };

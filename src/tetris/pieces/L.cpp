@@ -1,66 +1,24 @@
 #include "L.hpp"
-#include "opengl/ObjectRenderer.hpp"
 
-void LPiece::_create() {
+void LPiece::init() {
 	// Looks like:
 	//   #
 	// #0#
-	m_vBlockCoordinates.push_back({-1, 0});
-	m_vBlockCoordinates.push_back({0, 0});
-	m_vBlockCoordinates.push_back({1, 0});
-	m_vBlockCoordinates.push_back({1, 1});
-}
+	m_vBlockCoordinates[0] = {{-1, 0}, {0, 0}, {1, 0}, {1, 1}};
+	// ##
+	//  0
+	//  #
+	m_vBlockCoordinates[1] = {{0, -1}, {0, 0}, {0, 1}, {-1, 1}};
+	// #0#
+	// #
+	m_vBlockCoordinates[2] = {{1, 0}, {0, 0}, {-1, 0}, {-1, -1}};
+	// #
+	// 0
+	// ##
+	m_vBlockCoordinates[3] = {{0, 1}, {0, 0}, {0, -1}, {1, -1}};
 
-void LPiece::init() {
-	float r = 0.1f,
-		  g = 0.66f,
-		  b = 0.71f;
-	float vertices[] = {
-		// vertices        // texture  // color
-		 0.5f, 0.5f, 0.0f, 1.0f, 1.0f, r, g, b, // top right
-		-0.5f, 0.5f, 0.0f, 0.0f, 1.0f, r, g, b, // top left
-		 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, r, g, b, // bottom right
-		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, r, g, b, // bottom left
-
-		-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, r, g, b, // top right
-		-1.5f, 0.5f, 0.0f, 0.0f, 1.0f, r, g, b, // top left
-		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, r, g, b, // bottom right
-		-1.5f, -0.5f, 0.0f, 0.0f, 0.0f, r, g, b, // bottom left
-
-		 1.5f, 0.5f, 0.0f, 1.0f, 1.0f, r, g, b, // top right
-		 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, r, g, b, // top left
-		 1.5f, -0.5f, 0.0f, 1.0f, 0.0f, r, g, b, // bottom right
-		 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, r, g, b, // bottom left
-
-		 1.5f, 1.5f, 0.0f, 1.0f, 1.0f, r, g, b, // top right
-		 0.5f, 1.5f, 0.0f, 0.0f, 1.0f, r, g, b, // top left
-		 1.5f, 0.5f, 0.0f, 1.0f, 0.0f, r, g, b, // bottom right
-		 0.5f, 0.5f, 0.0f, 0.0f, 0.0f, r, g, b  // bottom left
-	};
-	unsigned int indices[] = {  // note that we start from 0!
-		0, 1, 2,   // first triangle
-		1, 2, 3,   // second triangle
-
-		4, 5, 6,   // first triangle
-		5, 6, 7,   // second triangle
-
-		8, 9, 10,   // first triangle
-		9, 10, 11,   // second triangle
-
-		12, 13, 14,   // first triangle
-		13, 14, 15,   // second triangle
-	};
-	m_renderer = std::shared_ptr<GameObjectRenderer>(new ObjectRenderer());
-	ObjectRenderer *renderer = (ObjectRenderer *) m_renderer.get();
-
-	renderer->init();
-	renderer->setShaderProgram("default");
-	renderer->setTexture("piece.png");
-	renderer->setVertices(
-		vertices,
-		indices,
-		(int) sizeof(vertices),
-		(int) sizeof(indices)
-	);
-	_create();
+	m_color.r = 0.1f,
+	m_color.g = 0.66f,
+	m_color.b = 0.71f;
+	Piece::init();
 }

@@ -4,9 +4,6 @@
 #include "../Piece.hpp"
 
 class PlacedPiece : public Piece {
-	protected:
-	void _create();
-
 	public:
 	void init();
 };
