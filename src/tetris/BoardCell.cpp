@@ -2,9 +2,9 @@
 #include "opengl/ObjectRenderer.hpp"
 
 void BoardCell::init() {
-	float r = 0.502f,
-		  g = 0.742f,
-		  b = 0.86f;
+	float r = 1.0f,
+		  g = 1.0f,
+		  b = 1.0f;
 	float vertices[] = {
 		// vertices        // texture    // color
 		 0.5f, 0.5f, 0.0f, 1.0f, 1.0f, r, g, b, // top right

@@ -7,8 +7,8 @@ void PlacedPiece::init() {
 	m_vBlockCoordinates[2] = {{0, 0}};
 	m_vBlockCoordinates[3] = {{0, 0}};
 
-	m_color.r = 1.0f,
-	m_color.g = 1.0f,
-	m_color.b = 1.0f;
+	m_color.r = 0.502f,
+	m_color.g = 0.742f,
+	m_color.b = 0.86f;
 	Piece::init();
 }
