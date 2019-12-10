@@ -20,6 +20,8 @@ enum BoardState {
 	MOVE_PIECES_DOWN
 };
 
+enum CollisionType {TOUCHES, OVERLAPS};
+
 //class Piece;
 class Board : public GameObject {
 	private:
@@ -34,7 +36,7 @@ class Board : public GameObject {
 	bool m_bTurbo = false;
 
 	void _generatePiece();
-	bool _collides(unsigned int directions) const;
+	bool _collides(CollisionType type, unsigned int directions) const;
 	bool _isValid(int x, int y) const;
 	void _createPlacedPieces();
 	void _movePieceDown();

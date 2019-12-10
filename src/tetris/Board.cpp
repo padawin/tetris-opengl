@@ -9,8 +9,9 @@ const float TIME_BETWEEN_ACTIONS = 0.75f; // seconds
 const float TURBO_TIME_BETWEEN_ACTIONS = 0.05f; // seconds
 
 const unsigned int DIRECTION_DOWN = 0x01;
-const unsigned int DIRECTION_LEFT = 0x02;
-const unsigned int DIRECTION_RIGHT = 0x04;
+const unsigned int DIRECTION_UP = 0x02;
+const unsigned int DIRECTION_LEFT = 0x04;
+const unsigned int DIRECTION_RIGHT = 0x08;
 
 void Board::init() {
 	for (int i = 0; i < BOARD_SIZE; ++i) {
@@ -61,7 +62,7 @@ void Board::update() {
 			m_state = PIECE_FALLS;
 		}
 		else if (m_state == PIECE_FALLS) {
-			if (_collides(DIRECTION_DOWN)) {
+			if (_collides(TOUCHES, DIRECTION_DOWN)) {
 				_createPlacedPieces();
 				m_state = REMOVE_FULL_LINES;
 			}
@@ -112,16 +113,19 @@ void Board::_generatePiece() {
 	);
 }
 
-bool Board::_collides(unsigned int directions) const {
+bool Board::_collides(CollisionType type, unsigned int directions) const {
 	int currentPieceX = _getGridX(m_currentPieceCell);
 	int currentPieceY = _getGridY(m_currentPieceCell);
 	int isDown = directions & DIRECTION_DOWN;
+	int isUp = directions & DIRECTION_UP;
 	int isLeft = directions & DIRECTION_LEFT;
 	int isRight = directions & DIRECTION_RIGHT;
+	int distance = type == TOUCHES ? 1 : 0;
 	for (auto block : m_currentPiece->getBlocks()) {
-		if ((isDown && !_isValid(currentPieceX + block.x, currentPieceY + block.y - 1))
-			|| (isLeft && !_isValid(currentPieceX + block.x - 1, currentPieceY + block.y))
-			|| (isRight && !_isValid(currentPieceX + block.x + 1, currentPieceY + block.y))
+		if ((isDown && !_isValid(currentPieceX + block.x, currentPieceY + block.y - distance))
+			|| (isUp && !_isValid(currentPieceX + block.x, currentPieceY + block.y + distance))
+			|| (isLeft && !_isValid(currentPieceX + block.x - distance, currentPieceY + block.y))
+			|| (isRight && !_isValid(currentPieceX + block.x + distance, currentPieceY + block.y))
 		) {
 			return true;
 		}
@@ -183,7 +187,7 @@ void Board::_movePiece(int direction) {
 		return;
 	}
 
-	if (_collides(direction == -1 ? DIRECTION_LEFT : DIRECTION_RIGHT)) {
+	if (_collides(TOUCHES, direction == -1 ? DIRECTION_LEFT : DIRECTION_RIGHT)) {
 		return;
 	}
 
