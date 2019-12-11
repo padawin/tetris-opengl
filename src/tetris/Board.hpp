@@ -5,6 +5,9 @@
 #define BOARD_HEIGHT 18
 #define BOARD_SIZE 180
 
+#define NEXT_PIECE_X BOARD_WIDTH+4
+#define NEXT_PIECE_Y 1
+
 #define CELL_WIDTH 1
 #define CELL_HEIGHT 1
 
@@ -28,6 +31,7 @@ class Board : public GameObject {
 	BoardCell m_cells[BOARD_SIZE];
 	std::shared_ptr<Piece> m_pieces[BOARD_SIZE];
 	std::shared_ptr<Piece> m_currentPiece = nullptr;
+	std::shared_ptr<Piece> m_nextPiece = nullptr;
 	// Coordinates as board cells of the point 0 of the current piece
 	int m_currentPieceCell = 0;
 	BoardState m_state = GENERATE_PIECE;
@@ -36,7 +40,8 @@ class Board : public GameObject {
 	bool m_bTurbo = false;
 	bool m_bRotatedPressed = false;
 
-	void _generatePiece();
+	void _generateNextPiece();
+	void _setCurrentPiece();
 	bool _collides(CollisionType type, unsigned int directions) const;
 	bool _isValid(int x, int y) const;
 	void _createPlacedPieces();

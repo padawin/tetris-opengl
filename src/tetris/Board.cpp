@@ -19,6 +19,7 @@ void Board::init() {
 		m_cells[i].setPosition(_getWorldX(i), _getWorldY(i), 0.0f);
 		m_cells[i].update();
 	}
+	_generateNextPiece();
 }
 
 int Board::_getGridX(int cellIndex) const {
@@ -60,7 +61,8 @@ void Board::update() {
 	double timeBetweenActions = m_bTurbo ? TURBO_TIME_BETWEEN_ACTIONS : TIME_BETWEEN_ACTIONS;
 	if (glfwGetTime() - m_fLastActionTime >= timeBetweenActions) {
 		if (m_state == GENERATE_PIECE) {
-			_generatePiece();
+			_setCurrentPiece();
+			_generateNextPiece();
 			m_state = PIECE_FALLS;
 		}
 		else if (m_state == PIECE_FALLS) {
@@ -93,8 +95,13 @@ void Board::update() {
 	}
 }
 
-void Board::_generatePiece() {
-	m_currentPiece = std::shared_ptr<Piece>(PieceFactory::create());
+void Board::_generateNextPiece() {
+	m_nextPiece = std::shared_ptr<Piece>(PieceFactory::create());
+	m_nextPiece->setPosition(NEXT_PIECE_X, NEXT_PIECE_Y, 0.1f);
+}
+
+void Board::_setCurrentPiece() {
+	m_currentPiece = m_nextPiece;
 	m_currentPieceCell = BOARD_SIZE - BOARD_WIDTH / 2;
 	int currentPieceCellY = _getGridY(m_currentPieceCell);
 	int maxDistanceFromTop = 0;
@@ -177,6 +184,9 @@ void Board::render(std::shared_ptr<Camera> camera) {
 	}
 	if (m_currentPiece != nullptr) {
 		m_currentPiece->render(camera);
+	}
+	if (m_nextPiece != nullptr) {
+		m_nextPiece->render(camera);
 	}
 }
 
