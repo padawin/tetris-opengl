@@ -14,8 +14,8 @@ void SquarePiece::init() {
 	// ##
 	// 0#
 	m_vBlockCoordinates[3] = {{-1, 1}, {0, 1}, {0, 0}, {-1, 0}};
-	m_color.r = 0.312f,
-	m_color.g = 0.071f,
-	m_color.b = 0.66f;
+	m_color.r = 0.843f,
+	m_color.g = 0.373f,
+	m_color.b = 0.843f;
 	Piece::init();
 }

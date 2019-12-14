@@ -1,6 +1,6 @@
-#include "Bolt.hpp"
+#include "S.hpp"
 
-void BoltPiece::init() {
+void SPiece::init() {
 	// Looks like:
 	//  0#
 	// ##
@@ -16,8 +16,8 @@ void BoltPiece::init() {
 	// #0
 	//  #
 	m_vBlockCoordinates[3] = {{0, -1}, {0, 0}, {-1, 0}, {-1, 1}};
-	m_color.r = 0.915f,
-	m_color.g = 0.866f,
-	m_color.b = 0.209f;
+	m_color.r = 0.447f,
+	m_color.g = 0.624f,
+	m_color.b = 0.812f;
 	Piece::init();
 }

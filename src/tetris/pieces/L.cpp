@@ -17,8 +17,8 @@ void LPiece::init() {
 	// ##
 	m_vBlockCoordinates[3] = {{0, 1}, {0, 0}, {0, -1}, {1, -1}};
 
-	m_color.r = 0.1f,
-	m_color.g = 0.66f,
-	m_color.b = 0.71f;
+	m_color.r = 0.0f,
+	m_color.g = 0.0f,
+	m_color.b = 0.843f;
 	Piece::init();
 }
