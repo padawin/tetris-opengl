@@ -14,11 +14,12 @@ const unsigned int DIRECTION_LEFT = 0x04;
 const unsigned int DIRECTION_RIGHT = 0x08;
 
 void Board::init() {
-	for (int i = 0; i < BOARD_SIZE; ++i) {
-		m_cells[i].init();
-		m_cells[i].setPosition(_getWorldX(i), _getWorldY(i), 0.0f);
-		m_cells[i].update();
-	}
+	m_left.setPosition(-1.0f, BOARD_HEIGHT / 2 - 0.5f, 0.0f);
+	m_right.setPosition(BOARD_WIDTH, BOARD_HEIGHT / 2 - 0.5f, 0.0f);
+	m_left.init();
+	m_right.init();
+	m_left.update();
+	m_right.update();
 	_generateNextPiece();
 }
 
@@ -174,9 +175,8 @@ void Board::_movePieceDown() {
 }
 
 void Board::render(std::shared_ptr<Camera> camera) {
-	for (int i = 0; i < BOARD_SIZE; ++i) {
-		m_cells[i].render(camera);
-	}
+	m_left.render(camera);
+	m_right.render(camera);
 	for (int i = 0; i < BOARD_SIZE; ++i) {
 		if (m_pieces[i] != nullptr) {
 			m_pieces[i]->render(camera);

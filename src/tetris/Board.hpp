@@ -13,7 +13,7 @@
 
 #include "game/UserActions.hpp"
 #include "game/GameObject.hpp"
-#include "BoardCell.hpp"
+#include "BoardSide.hpp"
 #include "Piece.hpp"
 
 enum BoardState {
@@ -28,7 +28,8 @@ enum CollisionType {TOUCHES, OVERLAPS};
 //class Piece;
 class Board : public GameObject {
 	private:
-	BoardCell m_cells[BOARD_SIZE];
+	BoardSide m_left = BoardSide(BOARD_HEIGHT);
+	BoardSide m_right = BoardSide(BOARD_HEIGHT);
 	std::shared_ptr<Piece> m_pieces[BOARD_SIZE];
 	std::shared_ptr<Piece> m_currentPiece = nullptr;
 	std::shared_ptr<Piece> m_nextPiece = nullptr;
