@@ -33,6 +33,8 @@ class ObjectRenderer : public GameObjectRenderer {
 	void setRotation(float x, float y, float z);
 	void setPosition(float x, float y, float z);
 
+	void setUniform(std::string name, glm::vec3 value);
+
 	void render(std::shared_ptr<Camera> camera);
 };
 

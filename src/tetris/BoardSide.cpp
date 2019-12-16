@@ -5,17 +5,15 @@ BoardSide::BoardSide(int height) : m_iHeight(height) {
 }
 
 void BoardSide::init() {
-	float r = 0.64f,
-		  g = 0.64f,
-		  b = 0.64f;
+	glm::vec3 color = glm::vec3(0.64f, 0.64f, 0.64f);
 	float top = (float) m_iHeight / 2;
 	float bottom = (float) m_iHeight / -2;
 	float vertices[] = {
-		// vertices        // texture    // color
-		 0.5f, top, 0.0f, 1.0f, (float) m_iHeight, r, g, b, // top right
-		-0.5f, top, 0.0f, 0.0f, (float) m_iHeight, r, g, b, // top left
-		 0.5f, bottom, 0.0f, 1.0f, 0.0f, r, g, b, // bottom right
-		-0.5f, bottom, 0.0f, 0.0f, 0.0f, r, g, b  // bottom left
+		// vertices        // texture
+		 0.5f, top, 0.0f, 1.0f, (float) m_iHeight, // top right
+		-0.5f, top, 0.0f, 0.0f, (float) m_iHeight, // top left
+		 0.5f, bottom, 0.0f, 1.0f, 0.0f, // bottom right
+		-0.5f, bottom, 0.0f, 0.0f, 0.0f, // bottom left
 	};
 	unsigned int indices[] = {  // note that we start from 0!
 		0, 1, 2,   // first triangle
@@ -26,6 +24,7 @@ void BoardSide::init() {
 
 	renderer->init();
 	renderer->setShaderProgram("boardcell");
+	renderer->setUniform("color", color);
 	renderer->setTexture("piece.png");
 	renderer->setVertices(
 		vertices,

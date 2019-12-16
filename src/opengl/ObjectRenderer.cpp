@@ -32,14 +32,11 @@ void ObjectRenderer::setVertices(float* vertices, unsigned int* indices, int ver
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize, indices, GL_STATIC_DRAW);
 
 	// Vertex
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 	// Texture
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-	// Color
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
-	glEnableVertexAttribArray(2);
 
 	// note that this is allowed, the call to glVertexAttribPointer registered
 	// VBO as the vertex attribute's bound vertex buffer object so afterwards we
@@ -75,6 +72,13 @@ void ObjectRenderer::setRotation(float x, float y, float z) {
 
 void ObjectRenderer::setPosition(float x, float y, float z) {
 	m_position = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
+}
+
+void ObjectRenderer::setUniform(std::string name, glm::vec3 value) {
+	GLuint shaderProgram = shader_getProgram(m_sShaderProgram.c_str());
+	int location = glGetUniformLocation(shaderProgram, name.c_str());
+	glUseProgram(shaderProgram);
+	glUniform3f(location, value.x, value.y, value.z);
 }
 
 void ObjectRenderer::render(std::shared_ptr<Camera> camera) {
