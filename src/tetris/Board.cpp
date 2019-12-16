@@ -67,7 +67,7 @@ void Board::update() {
 			m_state = PIECE_FALLS;
 		}
 		else if (m_state == PIECE_FALLS) {
-			if (_collides(TOUCHES, DIRECTION_DOWN)) {
+			if (_collides(m_currentPieceCell, TOUCHES, DIRECTION_DOWN)) {
 				_createPlacedPieces();
 				m_state = REMOVE_FULL_LINES;
 			}
@@ -123,9 +123,9 @@ void Board::_setCurrentPiece() {
 	);
 }
 
-bool Board::_collides(CollisionType type, unsigned int directions) const {
-	int currentPieceX = _getGridX(m_currentPieceCell);
-	int currentPieceY = _getGridY(m_currentPieceCell);
+bool Board::_collides(int cellIndex, CollisionType type, unsigned int directions) const {
+	int currentPieceX = _getGridX(cellIndex);
+	int currentPieceY = _getGridY(cellIndex);
 	int isDown = directions & DIRECTION_DOWN;
 	int isUp = directions & DIRECTION_UP;
 	int isLeft = directions & DIRECTION_LEFT;
@@ -199,7 +199,7 @@ void Board::_movePiece(int direction) {
 		return;
 	}
 
-	if (_collides(TOUCHES, direction == -1 ? DIRECTION_LEFT : DIRECTION_RIGHT)) {
+	if (_collides(m_currentPieceCell, TOUCHES, direction == -1 ? DIRECTION_LEFT : DIRECTION_RIGHT)) {
 		return;
 	}
 
@@ -223,7 +223,7 @@ void Board::_rotatePiece(bool rotatePressed) {
 
 	if (!m_bRotatedPressed) {
 		m_currentPiece->rotate(1);
-		if (_collides(OVERLAPS, DIRECTION_DOWN | DIRECTION_UP | DIRECTION_LEFT | DIRECTION_RIGHT)) {
+		if (_collides(m_currentPieceCell, OVERLAPS, DIRECTION_DOWN | DIRECTION_UP | DIRECTION_LEFT | DIRECTION_RIGHT)) {
 			m_currentPiece->rotate(-1);
 		}
 		m_bRotatedPressed = true;

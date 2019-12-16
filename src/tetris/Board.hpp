@@ -43,7 +43,7 @@ class Board : public GameObject {
 
 	void _generateNextPiece();
 	void _setCurrentPiece();
-	bool _collides(CollisionType type, unsigned int directions) const;
+	bool _collides(int cellIndex, CollisionType type, unsigned int directions) const;
 	bool _isValid(int x, int y) const;
 	void _createPlacedPieces();
 	void _movePieceDown();
