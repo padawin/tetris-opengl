@@ -18,8 +18,6 @@ void Board::init() {
 	m_right.setPosition(BOARD_WIDTH, BOARD_HEIGHT / 2 - 0.5f, 0.0f);
 	m_left.init();
 	m_right.init();
-	m_left.update();
-	m_right.update();
 	_generateNextPiece();
 }
 
@@ -90,10 +88,6 @@ void Board::update() {
 		}
 		m_fLastActionTime = glfwGetTime();
 	}
-
-	if (m_currentPiece != nullptr) {
-		m_currentPiece->update();
-	}
 }
 
 void Board::_generateNextPiece() {
@@ -160,7 +154,6 @@ void Board::_createPlacedPieces() {
 			_getWorldY(pieceCell),
 			0.1f
 		);
-		m_pieces[pieceCell]->update();
 	}
 	m_currentPiece = nullptr;
 }

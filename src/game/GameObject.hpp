@@ -19,6 +19,7 @@ class GameObject {
 	virtual glm::vec3 getPosition() const;
 	virtual void update();
 	virtual void render(std::shared_ptr<Camera> camera);
+	virtual void render(std::shared_ptr<Camera> camera, glm::vec3 position, glm::vec3 angle, glm::vec3 scale);
 };
 
 #endif

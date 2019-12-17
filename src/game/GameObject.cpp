@@ -2,17 +2,21 @@
 #include <iostream>
 
 void GameObject::update() {
-	if (m_renderer != 0) {
-		m_renderer->setPosition(m_position.x, m_position.y, m_position.z);
-		m_renderer->setRotation(m_angle.x, m_angle.y, m_angle.z);
-		m_renderer->setScale(m_scale.x, m_scale.y, m_scale.z);
-	}
 }
 
 void GameObject::render(std::shared_ptr<Camera> camera) {
-	if (m_renderer != 0) {
-		m_renderer->render(camera);
+	render(camera, m_position, m_angle, m_scale);
+}
+
+void GameObject::render(std::shared_ptr<Camera> camera, glm::vec3 position, glm::vec3 angle, glm::vec3 scale) {
+	if (m_renderer == nullptr) {
+		return;
 	}
+
+	m_renderer->setPosition(position.x, position.y, position.z);
+	m_renderer->setRotation(angle.x, angle.y, angle.z);
+	m_renderer->setScale(scale.x, scale.y, scale.z);
+	m_renderer->render(camera);
 }
 
 void GameObject::setPosition(float x, float y, float z) {
