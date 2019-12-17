@@ -3,6 +3,8 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include "opengl/ObjectRenderer.hpp"
 
+const glm::vec3 COLOR_GHOST = glm::vec3(0.15f, 0.15f, 0.15f);
+
 std::vector<glm::ivec2> Piece::getBlocks() const {
 	return m_vBlockCoordinates[m_iOrientation];
 }
@@ -37,14 +39,31 @@ void Piece::init() {
 	);
 }
 
+void Piece::initGhost() {
+	m_ghost = std::shared_ptr<GameObject>(new GameObject());
+}
+
+std::shared_ptr<GameObject> Piece::getGhost() {
+	return m_ghost;
+}
+
 void Piece::render(std::shared_ptr<Camera> camera) {
 	ObjectRenderer *renderer = (ObjectRenderer *) m_renderer.get();
 	renderer->setUniform("color", m_color);
-	glm::vec3 position = getPosition();
-	for (auto block : m_vBlockCoordinates[m_iOrientation]) {
-		setPosition(position.x + (float) block.x, position.y + (float) block.y, position.z);
-		update();
-		GameObject::render(camera);
+	_render(camera, getPosition());
+	if (m_ghost != nullptr) {
+		renderer->setUniform("color", COLOR_GHOST);
+		_render(camera, m_ghost->getPosition());
 	}
-	setPosition(position.x, position.y, position.z);
+}
+
+void Piece::_render(std::shared_ptr<Camera> camera, glm::vec3 position) {
+	for (auto block : m_vBlockCoordinates[m_iOrientation]) {
+		glm::vec3 positionBlock = glm::vec3(
+			position.x + (float) block.x,
+			position.y + (float) block.y,
+			position.z
+		);
+		GameObject::render(camera, positionBlock, m_angle, m_scale);
+	}
 }

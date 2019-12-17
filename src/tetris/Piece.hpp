@@ -6,10 +6,13 @@
 
 class Piece : public GameObject {
 	protected:
+	std::shared_ptr<GameObject> m_ghost = nullptr;
 	std::vector<glm::ivec2> m_vBlockCoordinates[4] = {};
 	// From 0 to 3, represents the quarter of a circle
 	int m_iOrientation = 0;
 	glm::vec3 m_color = {0.0f, 0.0f, 0.0f};
+
+	void _render(std::shared_ptr<Camera> camera, glm::vec3 position);
 
 	public:
 	virtual ~Piece() {}
@@ -17,6 +20,9 @@ class Piece : public GameObject {
 	void rotate(int quarter);
 	void render(std::shared_ptr<Camera> camera);
 	virtual void init();
+
+	void initGhost();
+	std::shared_ptr<GameObject> getGhost();
 };
 
 #endif

@@ -56,6 +56,7 @@ class Board : public GameObject {
 	bool _hasFullLines() const;
 	void _removeFullLines();
 	void _groupBlocks();
+	void _updateGhost();
 
 	public:
 	void init();

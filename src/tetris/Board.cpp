@@ -97,6 +97,7 @@ void Board::_generateNextPiece() {
 
 void Board::_setCurrentPiece() {
 	m_currentPiece = m_nextPiece;
+	m_currentPiece->initGhost();
 	m_currentPieceCell = BOARD_SIZE - BOARD_WIDTH / 2;
 	int currentPieceCellY = _getGridY(m_currentPieceCell);
 	int maxDistanceFromTop = 0;
@@ -115,6 +116,7 @@ void Board::_setCurrentPiece() {
 		_getWorldY(m_currentPieceCell),
 		0.1f
 	);
+	_updateGhost();
 }
 
 bool Board::_collides(int cellIndex, CollisionType type, unsigned int directions) const {
@@ -202,6 +204,7 @@ void Board::_movePiece(int direction) {
 		_getWorldY(m_currentPieceCell),
 		0.1f
 	);
+	_updateGhost();
 }
 
 void Board::_rotatePiece(bool rotatePressed) {
@@ -220,6 +223,7 @@ void Board::_rotatePiece(bool rotatePressed) {
 			m_currentPiece->rotate(-1);
 		}
 		m_bRotatedPressed = true;
+		_updateGhost();
 	}
 }
 
@@ -293,4 +297,16 @@ void Board::_groupBlocks() {
 				m_pieces[newCellIndex] = nullptr;
 		}
 	}
+}
+
+void Board::_updateGhost() {
+	int ghostIndex = m_currentPieceCell;
+	while (!_collides(ghostIndex, TOUCHES, DIRECTION_DOWN)) {
+		ghostIndex -= BOARD_WIDTH;
+	}
+	m_currentPiece->getGhost()->setPosition(
+		_getWorldX(ghostIndex),
+		_getWorldY(ghostIndex),
+		-0.1f
+	);
 }
