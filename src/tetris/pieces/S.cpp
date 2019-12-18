@@ -19,5 +19,4 @@ void SPiece::init() {
 	m_color.r = 0.447f,
 	m_color.g = 0.624f,
 	m_color.b = 0.812f;
-	Piece::init();
 }

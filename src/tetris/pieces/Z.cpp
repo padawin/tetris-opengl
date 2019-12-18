@@ -19,5 +19,4 @@ void ZPiece::init() {
 	m_color.r = 0.915f,
 	m_color.g = 0.866f,
 	m_color.b = 0.209f;
-	Piece::init();
 }

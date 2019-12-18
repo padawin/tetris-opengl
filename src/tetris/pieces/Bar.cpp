@@ -19,5 +19,4 @@ void BarPiece::init() {
 	m_color.r = 0.937f,
 	m_color.g = 0.161f,
 	m_color.b = 0.161f;
-	Piece::init();
 }

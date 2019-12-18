@@ -20,5 +20,4 @@ void TPiece::init() {
 	m_color.r = 0.961f,
 	m_color.g = 0.475f,
 	m_color.b = 0.0f;
-	Piece::init();
 }

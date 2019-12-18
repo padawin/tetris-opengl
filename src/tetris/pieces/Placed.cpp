@@ -10,5 +10,4 @@ void PlacedPiece::init() {
 	m_color.r = 1.0f,
 	m_color.g = 1.0f,
 	m_color.b = 1.0f;
-	Piece::init();
 }

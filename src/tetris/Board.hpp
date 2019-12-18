@@ -13,7 +13,7 @@
 
 #include "game/UserActions.hpp"
 #include "game/GameObject.hpp"
-#include "BoardSide.hpp"
+#include "opengl/ObjectRenderer.hpp"
 #include "Piece.hpp"
 
 enum BoardState {
@@ -28,8 +28,10 @@ enum CollisionType {TOUCHES, OVERLAPS};
 //class Piece;
 class Board : public GameObject {
 	private:
-	BoardSide m_left = BoardSide(BOARD_HEIGHT);
-	BoardSide m_right = BoardSide(BOARD_HEIGHT);
+	GameObject m_left = GameObject();
+	GameObject m_right = GameObject();
+	ObjectRenderer m_sideRenderer = ObjectRenderer();
+	ObjectRenderer m_pieceRenderer = ObjectRenderer();
 	std::shared_ptr<Piece> m_pieces[BOARD_SIZE];
 	std::shared_ptr<Piece> m_currentPiece = nullptr;
 	std::shared_ptr<Piece> m_nextPiece = nullptr;

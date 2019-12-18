@@ -17,5 +17,4 @@ void SquarePiece::init() {
 	m_color.r = 0.843f,
 	m_color.g = 0.373f,
 	m_color.b = 0.843f;
-	Piece::init();
 }

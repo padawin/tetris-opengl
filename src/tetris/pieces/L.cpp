@@ -20,5 +20,4 @@ void LPiece::init() {
 	m_color.r = 0.0f,
 	m_color.g = 0.0f,
 	m_color.b = 0.843f;
-	Piece::init();
 }

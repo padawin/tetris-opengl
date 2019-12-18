@@ -20,5 +20,4 @@ void InvertedLPiece::init() {
 	m_color.r = 0.306f,
 	m_color.g = 0.604f,
 	m_color.b = 0.024f;
-	Piece::init();
 }

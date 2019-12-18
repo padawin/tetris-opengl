@@ -1,12 +1,15 @@
 #include <iostream>
 #include <GLFW/glfw3.h>
 #include "Board.hpp"
+#include "renderers.hpp"
 #include "opengl/ObjectRenderer.hpp"
 #include "PieceFactory.hpp"
 
 const float TIME_BETWEEN_PIECE_SIDE_MOVE = 0.1f; // seconds
 const float TIME_BETWEEN_ACTIONS = 0.75f; // seconds
 const float TURBO_TIME_BETWEEN_ACTIONS = 0.05f; // seconds
+
+const glm::vec3 COLOR_SIDE = glm::vec3(0.64f, 0.64f, 0.64f);
 
 const unsigned int DIRECTION_DOWN = 0x01;
 const unsigned int DIRECTION_UP = 0x02;
@@ -16,8 +19,8 @@ const unsigned int DIRECTION_RIGHT = 0x08;
 void Board::init() {
 	m_left.setPosition(-1.0f, BOARD_HEIGHT / 2 - 0.5f, 0.0f);
 	m_right.setPosition(BOARD_WIDTH, BOARD_HEIGHT / 2 - 0.5f, 0.0f);
-	m_left.init();
-	m_right.init();
+	renderer_initSideRenderer(&m_sideRenderer, BOARD_HEIGHT);
+	renderer_initPieceRenderer(&m_pieceRenderer);
 	_generateNextPiece();
 }
 
@@ -171,8 +174,9 @@ void Board::_createPlacedPieces() {
 }
 
 void Board::render(std::shared_ptr<Camera> camera) {
-	m_left.render(camera);
-	m_right.render(camera);
+	m_sideRenderer.setUniform("color", COLOR_SIDE);
+	m_left.render(camera, &m_sideRenderer);
+	m_right.render(camera, &m_sideRenderer);
 	for (int i = 0; i < BOARD_SIZE; ++i) {
 		_renderPiece(camera, m_pieces[i]);
 	}
