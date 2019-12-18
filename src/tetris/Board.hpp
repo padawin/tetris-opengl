@@ -43,16 +43,18 @@ class Board : public GameObject {
 
 	void _generateNextPiece();
 	void _setCurrentPiece();
+	int _getCurrentPieceTopOverlap() const;
+	void _moveCurrentPiece(int cellDelta);
 	bool _collides(int cellIndex, CollisionType type, unsigned int directions) const;
 	bool _isValid(int x, int y) const;
 	void _createPlacedPieces();
-	void _movePieceDown();
 	int _getGridX(int cellIndex) const;
 	int _getGridY(int cellIndex) const;
 	float _getWorldX(int cellIndex) const;
 	float _getWorldY(int cellIndex) const;
 	void _movePiece(int direction);
 	void _rotatePiece(bool rotatePressed);
+	void _renderPiece(std::shared_ptr<Camera> camera, std::shared_ptr<Piece> piece);
 	bool _hasFullLines() const;
 	void _removeFullLines();
 	void _groupBlocks();

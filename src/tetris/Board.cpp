@@ -70,7 +70,7 @@ void Board::update() {
 				m_state = REMOVE_FULL_LINES;
 			}
 			else {
-				_movePieceDown();
+				_moveCurrentPiece(-BOARD_WIDTH);
 			}
 		}
 		else if (m_state == REMOVE_FULL_LINES) {
@@ -99,6 +99,23 @@ void Board::_setCurrentPiece() {
 	m_currentPiece = m_nextPiece;
 	m_currentPiece->initGhost();
 	m_currentPieceCell = BOARD_SIZE - BOARD_WIDTH / 2;
+	int maxDistanceFromTop = _getCurrentPieceTopOverlap();
+
+	// Move the piece down so that it in not out of the board
+	_moveCurrentPiece(-maxDistanceFromTop * BOARD_WIDTH);
+	_updateGhost();
+}
+
+void Board::_moveCurrentPiece(int cellDelta) {
+	m_currentPieceCell += cellDelta;
+	m_currentPiece->setPosition(
+		_getWorldX(m_currentPieceCell),
+		_getWorldY(m_currentPieceCell),
+		0.1f
+	);
+}
+
+int Board::_getCurrentPieceTopOverlap() const {
 	int currentPieceCellY = _getGridY(m_currentPieceCell);
 	int maxDistanceFromTop = 0;
 	int topRow = BOARD_HEIGHT - 1;
@@ -109,14 +126,7 @@ void Board::_setCurrentPiece() {
 			maxDistanceFromTop = distanceFromTop;
 		}
 	}
-	// Move the piece down so that it in not out of the board
-	m_currentPieceCell -= maxDistanceFromTop * BOARD_WIDTH;
-	m_currentPiece->setPosition(
-		_getWorldX(m_currentPieceCell),
-		_getWorldY(m_currentPieceCell),
-		0.1f
-	);
-	_updateGhost();
+	return maxDistanceFromTop;
 }
 
 bool Board::_collides(int cellIndex, CollisionType type, unsigned int directions) const {
@@ -160,28 +170,19 @@ void Board::_createPlacedPieces() {
 	m_currentPiece = nullptr;
 }
 
-void Board::_movePieceDown() {
-	m_currentPieceCell -= BOARD_WIDTH;
-	m_currentPiece->setPosition(
-		_getWorldX(m_currentPieceCell),
-		_getWorldY(m_currentPieceCell),
-		0.1f
-	);
-}
-
 void Board::render(std::shared_ptr<Camera> camera) {
 	m_left.render(camera);
 	m_right.render(camera);
 	for (int i = 0; i < BOARD_SIZE; ++i) {
-		if (m_pieces[i] != nullptr) {
-			m_pieces[i]->render(camera);
-		}
+		_renderPiece(camera, m_pieces[i]);
 	}
-	if (m_currentPiece != nullptr) {
-		m_currentPiece->render(camera);
-	}
-	if (m_nextPiece != nullptr) {
-		m_nextPiece->render(camera);
+	_renderPiece(camera, m_currentPiece);
+	_renderPiece(camera, m_nextPiece);
+}
+
+void Board::_renderPiece(std::shared_ptr<Camera> camera, std::shared_ptr<Piece> piece) {
+	if (piece != nullptr) {
+		piece->render(camera, &m_pieceRenderer);
 	}
 }
 
@@ -198,12 +199,7 @@ void Board::_movePiece(int direction) {
 		return;
 	}
 
-	m_currentPieceCell += direction;
-	m_currentPiece->setPosition(
-		_getWorldX(m_currentPieceCell),
-		_getWorldY(m_currentPieceCell),
-		0.1f
-	);
+	_moveCurrentPiece(direction);
 	_updateGhost();
 }
 
