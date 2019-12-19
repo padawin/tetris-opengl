@@ -20,7 +20,8 @@ enum BoardState {
 	GENERATE_PIECE,
 	PIECE_FALLS,
 	REMOVE_FULL_LINES,
-	MOVE_PIECES_DOWN
+	MOVE_PIECES_DOWN,
+	LOST
 };
 
 enum CollisionType {TOUCHES, OVERLAPS};
@@ -69,6 +70,8 @@ class Board : public GameObject {
 	void render(std::shared_ptr<Camera> camera);
 
 	void setTurbo(bool turbo);
+
+	bool hasLost() const;
 };
 
 #endif

@@ -1,16 +1,12 @@
-#ifndef __GAME_SCENE__
-#define __GAME_SCENE__
+#ifndef __GAME_OVER_SCENE__
+#define __GAME_OVER_SCENE__
 
 #include "game/SceneState.hpp"
 #include "game/UserActions.hpp"
-#include "tetris/Board.hpp"
 
-class GameScene : public SceneState {
-	private:
-	Board m_board;
-
+class GameOverScene : public SceneState {
 	public:
-	GameScene(UserActions &userActions);
+	GameOverScene(UserActions &userActions);
 	bool onEnter();
 	void update(StateMachine<SceneState> &stateMachine);
 	void render();

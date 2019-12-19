@@ -1,6 +1,7 @@
 #include "Game.hpp"
 #include "opengl/PerspectiveCamera.hpp"
 #include "game/cameraView/Fixed.hpp"
+#include "GameOver.hpp"
 #include <iostream>
 
 std::string GameScene::getStateID() const {
@@ -31,6 +32,9 @@ void GameScene::update(StateMachine<SceneState> &stateMachine) {
 	m_board.handleUserEvents(m_userActions);
 	m_cameraView->update();
 	m_board.update();
+	if (m_board.hasLost()) {
+		stateMachine.changeState(new GameOverScene(m_userActions));
+	}
 }
 
 void GameScene::render() {

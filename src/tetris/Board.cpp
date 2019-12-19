@@ -65,7 +65,12 @@ void Board::update() {
 		if (m_state == GENERATE_PIECE) {
 			_setCurrentPiece();
 			_generateNextPiece();
-			m_state = PIECE_FALLS;
+			if (_collides(m_currentPieceCell, OVERLAPS, DIRECTION_DOWN)) {
+				m_state = LOST;
+			}
+			else {
+				m_state = PIECE_FALLS;
+			}
 		}
 		else if (m_state == PIECE_FALLS) {
 			if (_collides(m_currentPieceCell, TOUCHES, DIRECTION_DOWN)) {
@@ -91,6 +96,10 @@ void Board::update() {
 		}
 		m_fLastActionTime = glfwGetTime();
 	}
+}
+
+bool Board::hasLost() const {
+	return m_state == LOST;
 }
 
 void Board::_generateNextPiece() {
