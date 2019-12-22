@@ -1,6 +1,12 @@
 #ifndef __BOARD__
 #define __BOARD__
 
+#include <memory>
+#include "game/Camera.hpp"
+#include "game/GameObject.hpp"
+#include "opengl/ObjectRenderer.hpp"
+#include "Piece.hpp"
+
 #define BOARD_WIDTH 10
 #define BOARD_HEIGHT 18
 #define BOARD_SIZE 180
@@ -11,22 +17,13 @@
 #define CELL_WIDTH 1
 #define CELL_HEIGHT 1
 
-#include "game/UserActions.hpp"
-#include "game/GameObject.hpp"
-#include "opengl/ObjectRenderer.hpp"
-#include "Piece.hpp"
-
-enum BoardState {
-	GENERATE_PIECE,
-	PIECE_FALLS,
-	REMOVE_FULL_LINES,
-	MOVE_PIECES_DOWN,
-	LOST
-};
-
 enum CollisionType {TOUCHES, OVERLAPS};
 
-//class Piece;
+const unsigned int DIRECTION_DOWN = 0x01;
+const unsigned int DIRECTION_UP = 0x02;
+const unsigned int DIRECTION_LEFT = 0x04;
+const unsigned int DIRECTION_RIGHT = 0x08;
+
 class Board : public GameObject {
 	private:
 	GameObject m_left = GameObject();
@@ -38,41 +35,34 @@ class Board : public GameObject {
 	std::shared_ptr<Piece> m_nextPiece = nullptr;
 	// Coordinates as board cells of the point 0 of the current piece
 	int m_currentPieceCell = 0;
-	BoardState m_state = GENERATE_PIECE;
-	double m_fLastPieceSideMove = 0.0f;
-	double m_fLastActionTime = 0.0f;
-	bool m_bTurbo = false;
-	bool m_bRotatedPressed = false;
 
-	void _generateNextPiece();
-	void _setCurrentPiece();
 	int _getCurrentPieceTopOverlap() const;
 	void _moveCurrentPiece(int cellDelta);
-	bool _collides(int cellIndex, CollisionType type, unsigned int directions) const;
 	bool _isValid(int x, int y) const;
-	void _createPlacedPieces();
 	int _getGridX(int cellIndex) const;
 	int _getGridY(int cellIndex) const;
 	float _getWorldX(int cellIndex) const;
 	float _getWorldY(int cellIndex) const;
-	void _movePieceSide(unsigned int direction);
-	void _movePieceDown();
-	void _rotatePiece(bool rotatePressed);
-	void _renderPiece(std::shared_ptr<Camera> camera, std::shared_ptr<Piece> piece);
-	bool _hasFullLines() const;
-	void _removeFullLines();
-	void _groupBlocks();
 	void _updateGhost();
+
+	void _renderPiece(std::shared_ptr<Camera> camera, std::shared_ptr<Piece> piece);
 
 	public:
 	void init();
-	void handleUserEvents(UserActions &userActions);
-	void update();
+	int getCurrentPieceCellIndex() const;
+	bool collides(int cellIndex, CollisionType type, unsigned int directions) const;
+	void movePieceSide(unsigned int direction);
+	void movePieceDown();
+
+	void setCurrentPiece();
+	void generateNextPiece();
+	void createPlacedPieces();
+	void rotatePiece();
+	bool hasFullLines() const;
+	void removeFullLines();
+	void groupBlocks();
+
 	void render(std::shared_ptr<Camera> camera);
-
-	void setTurbo(bool turbo);
-
-	bool hasLost() const;
 };
 
 #endif

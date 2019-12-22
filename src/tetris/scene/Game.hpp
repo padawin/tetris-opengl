@@ -3,10 +3,12 @@
 
 #include "game/SceneState.hpp"
 #include "game/UserActions.hpp"
+#include "tetris/Rules.hpp"
 #include "tetris/Board.hpp"
 
 class GameScene : public SceneState {
 	private:
+	Rules m_rules;
 	Board m_board;
 
 	public:

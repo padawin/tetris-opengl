@@ -1,27 +1,15 @@
-#include <iostream>
-#include <GLFW/glfw3.h>
 #include "Board.hpp"
 #include "renderers.hpp"
-#include "opengl/ObjectRenderer.hpp"
 #include "PieceFactory.hpp"
 
-const float TIME_BETWEEN_PIECE_SIDE_MOVE = 0.1f; // seconds
-const float TIME_BETWEEN_ACTIONS = 0.75f; // seconds
-const float TURBO_TIME_BETWEEN_ACTIONS = 0.05f; // seconds
-
 const glm::vec3 COLOR_SIDE = glm::vec3(0.64f, 0.64f, 0.64f);
-
-const unsigned int DIRECTION_DOWN = 0x01;
-const unsigned int DIRECTION_UP = 0x02;
-const unsigned int DIRECTION_LEFT = 0x04;
-const unsigned int DIRECTION_RIGHT = 0x08;
 
 void Board::init() {
 	m_left.setPosition(-1.0f, BOARD_HEIGHT / 2 - 0.5f, 0.0f);
 	m_right.setPosition(BOARD_WIDTH, BOARD_HEIGHT / 2 - 0.5f, 0.0f);
 	renderer_initSideRenderer(&m_sideRenderer, BOARD_HEIGHT);
 	renderer_initPieceRenderer(&m_pieceRenderer);
-	_generateNextPiece();
+	generateNextPiece();
 }
 
 int Board::_getGridX(int cellIndex) const {
@@ -40,74 +28,12 @@ float Board::_getWorldY(int cellIndex) const {
 	return m_position.y + (float) _getGridY(cellIndex) * CELL_HEIGHT;
 }
 
-void Board::handleUserEvents(UserActions &userActions) {
-	setTurbo(m_state == PIECE_FALLS && userActions.getActionState("TURBO"));
-	_rotatePiece(userActions.getActionState("ROTATE"));
-
-	if (glfwGetTime() - m_fLastPieceSideMove < TIME_BETWEEN_PIECE_SIDE_MOVE) {
-		return;
-	}
-
-	if (userActions.getActionState("LEFT")) {
-		_movePieceSide(DIRECTION_LEFT);
-		m_fLastPieceSideMove = glfwGetTime();
-
-	}
-	else if (userActions.getActionState("RIGHT")) {
-		_movePieceSide(DIRECTION_RIGHT);
-		m_fLastPieceSideMove = glfwGetTime();
-	}
-}
-
-void Board::update() {
-	double timeBetweenActions = m_bTurbo ? TURBO_TIME_BETWEEN_ACTIONS : TIME_BETWEEN_ACTIONS;
-	if (glfwGetTime() - m_fLastActionTime >= timeBetweenActions) {
-		if (m_state == GENERATE_PIECE) {
-			_setCurrentPiece();
-			_generateNextPiece();
-			if (_collides(m_currentPieceCell, OVERLAPS, DIRECTION_DOWN)) {
-				m_state = LOST;
-			}
-			else {
-				m_state = PIECE_FALLS;
-			}
-		}
-		else if (m_state == PIECE_FALLS) {
-			if (_collides(m_currentPieceCell, TOUCHES, DIRECTION_DOWN)) {
-				_createPlacedPieces();
-				m_state = REMOVE_FULL_LINES;
-			}
-			else {
-				_movePieceDown();
-			}
-		}
-		else if (m_state == REMOVE_FULL_LINES) {
-			if (_hasFullLines()) {
-				_removeFullLines();
-				m_state = MOVE_PIECES_DOWN;
-			}
-			else {
-				m_state = GENERATE_PIECE;
-			}
-		}
-		else if (m_state == MOVE_PIECES_DOWN) {
-			_groupBlocks();
-			m_state = GENERATE_PIECE;
-		}
-		m_fLastActionTime = glfwGetTime();
-	}
-}
-
-bool Board::hasLost() const {
-	return m_state == LOST;
-}
-
-void Board::_generateNextPiece() {
+void Board::generateNextPiece() {
 	m_nextPiece = std::shared_ptr<Piece>(PieceFactory::create());
 	m_nextPiece->setPosition(NEXT_PIECE_X, NEXT_PIECE_Y, 0.1f);
 }
 
-void Board::_setCurrentPiece() {
+void Board::setCurrentPiece() {
 	m_currentPiece = m_nextPiece;
 	m_currentPiece->initGhost();
 	m_currentPieceCell = BOARD_SIZE - BOARD_WIDTH / 2;
@@ -141,7 +67,7 @@ int Board::_getCurrentPieceTopOverlap() const {
 	return maxDistanceFromTop;
 }
 
-bool Board::_collides(int cellIndex, CollisionType type, unsigned int directions) const {
+bool Board::collides(int cellIndex, CollisionType type, unsigned int directions) const {
 	int currentPieceX = _getGridX(cellIndex);
 	int currentPieceY = _getGridY(cellIndex);
 	int isDown = directions & DIRECTION_DOWN;
@@ -169,7 +95,7 @@ bool Board::_isValid(int x, int y) const {
 	return m_pieces[cellIndex] == nullptr;
 }
 
-void Board::_createPlacedPieces() {
+void Board::createPlacedPieces() {
 	for (auto block : m_currentPiece->getBlocks()) {
 		int pieceCell = m_currentPieceCell + block.x + block.y * BOARD_WIDTH;
 		m_pieces[pieceCell] = std::shared_ptr<Piece>(PieceFactory::createPlaced());
@@ -199,16 +125,16 @@ void Board::_renderPiece(std::shared_ptr<Camera> camera, std::shared_ptr<Piece> 
 	}
 }
 
-void Board::setTurbo(bool turbo) {
-	m_bTurbo = turbo;
+int Board::getCurrentPieceCellIndex() const {
+	return m_currentPieceCell;
 }
 
-void Board::_movePieceSide(unsigned int direction) {
+void Board::movePieceSide(unsigned int direction) {
 	if (m_currentPiece == nullptr) {
 		return;
 	}
 
-	if (_collides(m_currentPieceCell, TOUCHES, direction)) {
+	if (collides(m_currentPieceCell, TOUCHES, direction)) {
 		return;
 	}
 
@@ -216,31 +142,23 @@ void Board::_movePieceSide(unsigned int direction) {
 	_updateGhost();
 }
 
-void Board::_movePieceDown() {
+void Board::movePieceDown() {
 	_moveCurrentPiece(-BOARD_WIDTH);
 }
 
-void Board::_rotatePiece(bool rotatePressed) {
+void Board::rotatePiece() {
 	if (m_currentPiece == nullptr) {
 		return;
 	}
 
-	if (!rotatePressed) {
-		m_bRotatedPressed = false;
-		return;
+	m_currentPiece->rotate(1);
+	if (collides(m_currentPieceCell, OVERLAPS, DIRECTION_DOWN | DIRECTION_UP | DIRECTION_LEFT | DIRECTION_RIGHT)) {
+		m_currentPiece->rotate(-1);
 	}
-
-	if (!m_bRotatedPressed) {
-		m_currentPiece->rotate(1);
-		if (_collides(m_currentPieceCell, OVERLAPS, DIRECTION_DOWN | DIRECTION_UP | DIRECTION_LEFT | DIRECTION_RIGHT)) {
-			m_currentPiece->rotate(-1);
-		}
-		m_bRotatedPressed = true;
-		_updateGhost();
-	}
+	_updateGhost();
 }
 
-bool Board::_hasFullLines() const {
+bool Board::hasFullLines() const {
 	for (int line = 0; line < BOARD_HEIGHT; line++) {
 		bool lineIsFull = true;
 		for (int column = 0; column < BOARD_WIDTH; column++) {
@@ -257,7 +175,7 @@ bool Board::_hasFullLines() const {
 	return false;
 }
 
-void Board::_removeFullLines() {
+void Board::removeFullLines() {
 	for (int line = 0; line < BOARD_HEIGHT; line++) {
 		bool lineIsFull = true;
 		for (int column = 0; column < BOARD_WIDTH; column++) {
@@ -276,7 +194,7 @@ void Board::_removeFullLines() {
 	}
 }
 
-void Board::_groupBlocks() {
+void Board::groupBlocks() {
 	int currY = 0;
 	for (int line = 0; line < BOARD_HEIGHT; line++) {
 		bool lineIsEmpty = true;
@@ -314,7 +232,7 @@ void Board::_groupBlocks() {
 
 void Board::_updateGhost() {
 	int ghostIndex = m_currentPieceCell;
-	while (!_collides(ghostIndex, TOUCHES, DIRECTION_DOWN)) {
+	while (!collides(ghostIndex, TOUCHES, DIRECTION_DOWN)) {
 		ghostIndex -= BOARD_WIDTH;
 	}
 	m_currentPiece->getGhost()->setPosition(

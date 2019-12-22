@@ -10,6 +10,7 @@ std::string GameScene::getStateID() const {
 
 GameScene::GameScene(UserActions &userActions) :
 	SceneState(userActions),
+	m_rules(Rules()),
 	m_board(Board())
 {
 }
@@ -29,10 +30,10 @@ void GameScene::update(StateMachine<SceneState> &stateMachine) {
 		stateMachine.clean();
 		return;
 	}
-	m_board.handleUserEvents(m_userActions);
+	m_rules.handleUserEvents(m_userActions, m_board);
 	m_cameraView->update();
-	m_board.update();
-	if (m_board.hasLost()) {
+	m_rules.update(m_board);
+	if (m_rules.hasLost()) {
 		stateMachine.changeState(new GameOverScene(m_userActions));
 	}
 }
