@@ -12,25 +12,26 @@ void Board::init() {
 	generateNextPiece();
 }
 
-int Board::_getGridX(int cellIndex) const {
-	return cellIndex % BOARD_WIDTH;
-}
-
-int Board::_getGridY(int cellIndex) const {
-	return cellIndex / BOARD_WIDTH;
-}
-
-float Board::_getWorldX(int cellIndex) const {
-	return m_position.x + (float) _getGridX(cellIndex) * CELL_WIDTH;
-}
-
-float Board::_getWorldY(int cellIndex) const {
-	return m_position.y + (float) _getGridY(cellIndex) * CELL_HEIGHT;
-}
-
 void Board::generateNextPiece() {
 	m_nextPiece = std::shared_ptr<Piece>(PieceFactory::create());
 	m_nextPiece->setPosition(NEXT_PIECE_X, NEXT_PIECE_Y, 0.1f);
+}
+
+void Board::movePieceSide(unsigned int direction) {
+	if (m_currentPiece == nullptr) {
+		return;
+	}
+
+	if (collides(m_currentPieceCell, TOUCHES, direction)) {
+		return;
+	}
+
+	_moveCurrentPiece(direction == DIRECTION_LEFT ? -1 : 1);
+	_updateGhost();
+}
+
+void Board::movePieceDown() {
+	_moveCurrentPiece(-BOARD_WIDTH);
 }
 
 void Board::setCurrentPiece() {
@@ -42,15 +43,6 @@ void Board::setCurrentPiece() {
 	// Move the piece down so that it in not out of the board
 	_moveCurrentPiece(-maxDistanceFromTop * BOARD_WIDTH);
 	_updateGhost();
-}
-
-void Board::_moveCurrentPiece(int cellDelta) {
-	m_currentPieceCell += cellDelta;
-	m_currentPiece->setPosition(
-		_getWorldX(m_currentPieceCell),
-		_getWorldY(m_currentPieceCell),
-		0.1f
-	);
 }
 
 int Board::_getCurrentPieceTopOverlap() const {
@@ -65,6 +57,43 @@ int Board::_getCurrentPieceTopOverlap() const {
 		}
 	}
 	return maxDistanceFromTop;
+}
+
+void Board::_moveCurrentPiece(int cellDelta) {
+	m_currentPieceCell += cellDelta;
+	m_currentPiece->setPosition(
+		_getWorldX(m_currentPieceCell),
+		_getWorldY(m_currentPieceCell),
+		0.1f
+	);
+}
+
+void Board::_updateGhost() {
+	int ghostIndex = m_currentPieceCell;
+	while (!collides(ghostIndex, TOUCHES, DIRECTION_DOWN)) {
+		ghostIndex -= BOARD_WIDTH;
+	}
+	m_currentPiece->getGhost()->setPosition(
+		_getWorldX(ghostIndex),
+		_getWorldY(ghostIndex),
+		-0.1f
+	);
+}
+
+int Board::_getGridX(int cellIndex) const {
+	return cellIndex % BOARD_WIDTH;
+}
+
+int Board::_getGridY(int cellIndex) const {
+	return cellIndex / BOARD_WIDTH;
+}
+
+float Board::_getWorldX(int cellIndex) const {
+	return m_position.x + (float) _getGridX(cellIndex) * CELL_WIDTH;
+}
+
+float Board::_getWorldY(int cellIndex) const {
+	return m_position.y + (float) _getGridY(cellIndex) * CELL_HEIGHT;
 }
 
 bool Board::collides(int cellIndex, CollisionType type, unsigned int directions) const {
@@ -127,23 +156,6 @@ void Board::_renderPiece(std::shared_ptr<Camera> camera, std::shared_ptr<Piece> 
 
 int Board::getCurrentPieceCellIndex() const {
 	return m_currentPieceCell;
-}
-
-void Board::movePieceSide(unsigned int direction) {
-	if (m_currentPiece == nullptr) {
-		return;
-	}
-
-	if (collides(m_currentPieceCell, TOUCHES, direction)) {
-		return;
-	}
-
-	_moveCurrentPiece(direction == DIRECTION_LEFT ? -1 : 1);
-	_updateGhost();
-}
-
-void Board::movePieceDown() {
-	_moveCurrentPiece(-BOARD_WIDTH);
 }
 
 void Board::rotatePiece() {
@@ -228,16 +240,4 @@ void Board::groupBlocks() {
 				m_pieces[newCellIndex] = nullptr;
 		}
 	}
-}
-
-void Board::_updateGhost() {
-	int ghostIndex = m_currentPieceCell;
-	while (!collides(ghostIndex, TOUCHES, DIRECTION_DOWN)) {
-		ghostIndex -= BOARD_WIDTH;
-	}
-	m_currentPiece->getGhost()->setPosition(
-		_getWorldX(ghostIndex),
-		_getWorldY(ghostIndex),
-		-0.1f
-	);
 }
