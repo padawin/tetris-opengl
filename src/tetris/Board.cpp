@@ -49,12 +49,12 @@ void Board::handleUserEvents(UserActions &userActions) {
 	}
 
 	if (userActions.getActionState("LEFT")) {
-		_movePiece(-1);
+		_movePieceSide(DIRECTION_LEFT);
 		m_fLastPieceSideMove = glfwGetTime();
 
 	}
 	else if (userActions.getActionState("RIGHT")) {
-		_movePiece(1);
+		_movePieceSide(DIRECTION_RIGHT);
 		m_fLastPieceSideMove = glfwGetTime();
 	}
 }
@@ -78,7 +78,7 @@ void Board::update() {
 				m_state = REMOVE_FULL_LINES;
 			}
 			else {
-				_moveCurrentPiece(-BOARD_WIDTH);
+				_movePieceDown();
 			}
 		}
 		else if (m_state == REMOVE_FULL_LINES) {
@@ -203,17 +203,21 @@ void Board::setTurbo(bool turbo) {
 	m_bTurbo = turbo;
 }
 
-void Board::_movePiece(int direction) {
+void Board::_movePieceSide(unsigned int direction) {
 	if (m_currentPiece == nullptr) {
 		return;
 	}
 
-	if (_collides(m_currentPieceCell, TOUCHES, direction == -1 ? DIRECTION_LEFT : DIRECTION_RIGHT)) {
+	if (_collides(m_currentPieceCell, TOUCHES, direction)) {
 		return;
 	}
 
-	_moveCurrentPiece(direction);
+	_moveCurrentPiece(direction == DIRECTION_LEFT ? -1 : 1);
 	_updateGhost();
+}
+
+void Board::_movePieceDown() {
+	_moveCurrentPiece(-BOARD_WIDTH);
 }
 
 void Board::_rotatePiece(bool rotatePressed) {

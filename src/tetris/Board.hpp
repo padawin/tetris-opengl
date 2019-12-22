@@ -55,7 +55,8 @@ class Board : public GameObject {
 	int _getGridY(int cellIndex) const;
 	float _getWorldX(int cellIndex) const;
 	float _getWorldY(int cellIndex) const;
-	void _movePiece(int direction);
+	void _movePieceSide(unsigned int direction);
+	void _movePieceDown();
 	void _rotatePiece(bool rotatePressed);
 	void _renderPiece(std::shared_ptr<Camera> camera, std::shared_ptr<Piece> piece);
 	bool _hasFullLines() const;
