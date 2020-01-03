@@ -29,6 +29,8 @@ class Rules {
 	void _addPoints(int linesRemovedCount);
 	void _levelUp(int linesRemovedCount);
 
+	double _getTimeBetweenActions() const;
+
 	void _generatePiece(Board &board);
 	void _pieceFall(Board &board);
 	void _removeFullLines(Board &board);

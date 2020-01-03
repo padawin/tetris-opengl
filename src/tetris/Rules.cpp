@@ -5,9 +5,10 @@
 #include "opengl/ObjectRenderer.hpp"
 #include "PieceFactory.hpp"
 
-const float TIME_BETWEEN_PIECE_SIDE_MOVE = 0.1f; // seconds
-const float TIME_BETWEEN_ACTIONS = 0.75f; // seconds
-const float TURBO_TIME_BETWEEN_ACTIONS = 0.05f; // seconds
+const float TIME_BETWEEN_PIECE_SIDE_MOVE = 0.07f; // seconds
+const float BASE_TIME_BETWEEN_ACTIONS = 0.75f; // seconds
+const float TIME_REDUCTION_PER_LEVEL = 0.1f; // percent
+const float TURBO_TIME_COEF = 9.0f; // coef
 
 void Rules::handleUserEvents(UserActions &userActions, Board &board) {
 	_setTurbo(m_state == PIECE_FALLS && userActions.getActionState("TURBO"));
@@ -44,8 +45,7 @@ void Rules::_rotatePiece(bool rotatePressed, Board &board) {
 }
 
 void Rules::update(Board &board) {
-	double timeBetweenActions = m_bTurbo ? TURBO_TIME_BETWEEN_ACTIONS : TIME_BETWEEN_ACTIONS;
-	if (glfwGetTime() - m_fLastActionTime >= timeBetweenActions) {
+	if (glfwGetTime() - m_fLastActionTime >= _getTimeBetweenActions()) {
 		if (m_state == GENERATE_PIECE) {
 			_generatePiece(board);
 		}
@@ -60,6 +60,21 @@ void Rules::update(Board &board) {
 		}
 		m_fLastActionTime = glfwGetTime();
 	}
+}
+
+double Rules::_getTimeBetweenActions() const {
+	if (m_state != PIECE_FALLS) {
+		return BASE_TIME_BETWEEN_ACTIONS;
+	}
+
+	// cap level to 10, after 10 the speed does not increase further
+	// this allows each level to increase of a 10th the speed of the pieces
+	float level = m_iLevel <= 10 ? (float) m_iLevel : 10.0f;
+	// calculate the time based on the level
+	double t = BASE_TIME_BETWEEN_ACTIONS * (1.0f - level * TIME_REDUCTION_PER_LEVEL);
+	// reduce the time if the turbo mode is on
+	t = t / (m_bTurbo ? TURBO_TIME_COEF : 1);
+	return t;
 }
 
 void Rules::_generatePiece(Board &board) {
