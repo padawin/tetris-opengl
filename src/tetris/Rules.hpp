@@ -29,6 +29,11 @@ class Rules {
 	void _addPoints(int linesRemovedCount);
 	void _levelUp(int linesRemovedCount);
 
+	void _generatePiece(Board &board);
+	void _pieceFall(Board &board);
+	void _removeFullLines(Board &board);
+	void _movePieceDown(Board &board);
+
 	public:
 	void handleUserEvents(UserActions &userActions, Board &board);
 	void update(Board &board);

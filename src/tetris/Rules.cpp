@@ -47,48 +47,64 @@ void Rules::update(Board &board) {
 	double timeBetweenActions = m_bTurbo ? TURBO_TIME_BETWEEN_ACTIONS : TIME_BETWEEN_ACTIONS;
 	if (glfwGetTime() - m_fLastActionTime >= timeBetweenActions) {
 		if (m_state == GENERATE_PIECE) {
-			board.setCurrentPiece();
-			board.generateNextPiece();
-			if (board.collides(board.getCurrentPieceCellIndex(), OVERLAPS, DIRECTION_DOWN)) {
-				m_state = LOST;
-			}
-			else {
-				m_state = PIECE_FALLS;
-			}
+			_generatePiece(board);
 		}
 		else if (m_state == PIECE_FALLS) {
-			if (board.collides(board.getCurrentPieceCellIndex(), TOUCHES, DIRECTION_DOWN)) {
-				board.createPlacedPieces();
-				int fullLinesCount = board.countFullLines();
-				if (fullLinesCount > 0) {
-					m_state = REMOVE_FULL_LINES;
-				}
-				else {
-					m_state = GENERATE_PIECE;
-				}
-			}
-			else {
-				board.movePieceDown();
-			}
+			_pieceFall(board);
 		}
 		else if (m_state == REMOVE_FULL_LINES) {
-			int fullLinesCount = board.countFullLines();
-			if (fullLinesCount > 0) {
-				board.removeFullLines();
-				_addPoints(fullLinesCount);
-				_levelUp(fullLinesCount);
-				m_state = MOVE_PIECES_DOWN;
-			}
-			else {
-				m_state = GENERATE_PIECE;
-			}
+			_removeFullLines(board);
 		}
 		else if (m_state == MOVE_PIECES_DOWN) {
-			board.groupBlocks();
-			m_state = GENERATE_PIECE;
+			_movePieceDown(board);
 		}
 		m_fLastActionTime = glfwGetTime();
 	}
+}
+
+void Rules::_generatePiece(Board &board) {
+	board.setCurrentPiece();
+	board.generateNextPiece();
+	if (board.collides(board.getCurrentPieceCellIndex(), OVERLAPS, DIRECTION_DOWN)) {
+		m_state = LOST;
+	}
+	else {
+		m_state = PIECE_FALLS;
+	}
+}
+
+void Rules::_pieceFall(Board &board) {
+	if (board.collides(board.getCurrentPieceCellIndex(), TOUCHES, DIRECTION_DOWN)) {
+		board.createPlacedPieces();
+		int fullLinesCount = board.countFullLines();
+		if (fullLinesCount > 0) {
+			m_state = REMOVE_FULL_LINES;
+		}
+		else {
+			m_state = GENERATE_PIECE;
+		}
+	}
+	else {
+		board.movePieceDown();
+	}
+}
+
+void Rules::_removeFullLines(Board &board) {
+	int fullLinesCount = board.countFullLines();
+	if (fullLinesCount > 0) {
+		board.removeFullLines();
+		_addPoints(fullLinesCount);
+		_levelUp(fullLinesCount);
+		m_state = MOVE_PIECES_DOWN;
+	}
+	else {
+		m_state = GENERATE_PIECE;
+	}
+}
+
+void Rules::_movePieceDown(Board &board) {
+	board.groupBlocks();
+	m_state = GENERATE_PIECE;
 }
 
 void Rules::_addPoints(int linesRemovedCount) {
