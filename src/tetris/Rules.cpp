@@ -59,7 +59,13 @@ void Rules::update(Board &board) {
 		else if (m_state == PIECE_FALLS) {
 			if (board.collides(board.getCurrentPieceCellIndex(), TOUCHES, DIRECTION_DOWN)) {
 				board.createPlacedPieces();
-				m_state = REMOVE_FULL_LINES;
+				int fullLinesCount = board.countFullLines();
+				if (fullLinesCount > 0) {
+					m_state = REMOVE_FULL_LINES;
+				}
+				else {
+					m_state = GENERATE_PIECE;
+				}
 			}
 			else {
 				board.movePieceDown();
