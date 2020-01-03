@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdio.h>
 #include <GLFW/glfw3.h>
 #include "Rules.hpp"
 #include "opengl/ObjectRenderer.hpp"
@@ -65,8 +66,11 @@ void Rules::update(Board &board) {
 			}
 		}
 		else if (m_state == REMOVE_FULL_LINES) {
-			if (board.hasFullLines()) {
+			int fullLinesCount = board.countFullLines();
+			if (fullLinesCount > 0) {
 				board.removeFullLines();
+				_addPoints(fullLinesCount);
+				_levelUp(fullLinesCount);
 				m_state = MOVE_PIECES_DOWN;
 			}
 			else {
@@ -78,6 +82,46 @@ void Rules::update(Board &board) {
 			m_state = GENERATE_PIECE;
 		}
 		m_fLastActionTime = glfwGetTime();
+	}
+}
+
+void Rules::_addPoints(int linesRemovedCount) {
+	int basePoints = 0;
+	switch (linesRemovedCount) {
+		case 1:
+			basePoints = 40;
+			break;
+		case 2:
+			basePoints = 100;
+			break;
+		case 3:
+			basePoints = 300;
+			break;
+		case 4:
+			basePoints = 1200;
+			break;
+		default:
+			std::cerr << "Unhandled number of lines removed: " << linesRemovedCount << std::endl;
+			break;
+	}
+	int points = basePoints * (m_iLevel + 1);
+	m_iPoints += points;
+	if (points > 0) {
+		printf(
+			"%d lines removed, +%d points, total: %d lines, %d points\n",
+			linesRemovedCount, points, m_iTotalLinesRemoved, m_iPoints
+		);
+	}
+}
+
+void Rules::_levelUp(int linesRemovedCount) {
+	int currentTens = (m_iTotalLinesRemoved / 10) % 10;
+	m_iTotalLinesRemoved += linesRemovedCount;
+	int newTens = (m_iTotalLinesRemoved / 10) % 10;
+	int delta = newTens - currentTens;
+	m_iLevel += delta;
+	if (delta > 0) {
+		std::cout << "Level up to: " << m_iLevel << std::endl;
 	}
 }
 

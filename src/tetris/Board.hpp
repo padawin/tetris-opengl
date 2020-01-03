@@ -58,7 +58,7 @@ class Board : public GameObject {
 	void generateNextPiece();
 	void createPlacedPieces();
 	void rotatePiece();
-	bool hasFullLines() const;
+	int countFullLines() const;
 	void removeFullLines();
 	void groupBlocks();
 

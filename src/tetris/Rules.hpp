@@ -20,8 +20,14 @@ class Rules {
 	bool m_bTurbo = false;
 	bool m_bRotatedPressed = false;
 
+	int m_iPoints = 0;
+	int m_iLevel = 0;
+	int m_iTotalLinesRemoved = 0;
+
 	void _setTurbo(bool turbo);
 	void _rotatePiece(bool rotatePressed, Board &board);
+	void _addPoints(int linesRemovedCount);
+	void _levelUp(int linesRemovedCount);
 
 	public:
 	void handleUserEvents(UserActions &userActions, Board &board);

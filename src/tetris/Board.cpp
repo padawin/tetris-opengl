@@ -170,7 +170,8 @@ void Board::rotatePiece() {
 	_updateGhost();
 }
 
-bool Board::hasFullLines() const {
+int Board::countFullLines() const {
+	int fullLinesCount = 0;
 	for (int line = 0; line < BOARD_HEIGHT; line++) {
 		bool lineIsFull = true;
 		for (int column = 0; column < BOARD_WIDTH; column++) {
@@ -181,10 +182,10 @@ bool Board::hasFullLines() const {
 			}
 		}
 		if (lineIsFull) {
-			return true;
+			fullLinesCount++;
 		}
 	}
-	return false;
+	return fullLinesCount;
 }
 
 void Board::removeFullLines() {
