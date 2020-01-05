@@ -1,6 +1,6 @@
 #include "Game.hpp"
 #include "opengl/PerspectiveCamera.hpp"
-#include "game/cameraView/Fixed.hpp"
+#include "game/cameraView/Rotate.hpp"
 #include "GameOver.hpp"
 #include <iostream>
 
@@ -17,8 +17,12 @@ GameScene::GameScene(UserActions &userActions) :
 
 bool GameScene::onEnter() {
 	m_board.init();
-	setCameraView(std::shared_ptr<CameraView>(new FixedView(glm::vec3(0.0f, 0.0f, -1.0f))));
-	m_cameraView->setPosition(glm::vec3(4.5f, 8.5f, 22.4f));
+	glm::vec3 boardPosition = m_board.getPosition();
+	boardPosition.x += BOARD_WIDTH / 2;
+	boardPosition.y += BOARD_HEIGHT / 2;
+	setCameraView(std::shared_ptr<CameraView>(new RotateView(boardPosition, 25.0f)));
+	std::static_pointer_cast<RotateView>(m_cameraView)->rotateVertical(25.0f);
+	std::static_pointer_cast<RotateView>(m_cameraView)->rotateHorizontal(90.0f);
 
 	setCamera(std::shared_ptr<Camera>(new PerspectiveCamera(m_cameraView, 45.0f, 800.0f / 600.0f, 0.1f, 100.0f)));
 	return true;
@@ -31,6 +35,12 @@ void GameScene::update(StateMachine<SceneState> &stateMachine) {
 		return;
 	}
 	m_rules.handleUserEvents(m_userActions, m_board);
+	if (m_userActions.getActionState("CAMERA_LEFT")) {
+		std::static_pointer_cast<RotateView>(m_cameraView)->rotateHorizontal(1.1f);
+	}
+	else if (m_userActions.getActionState("CAMERA_RIGHT")) {
+		std::static_pointer_cast<RotateView>(m_cameraView)->rotateHorizontal(-1.1f);
+	}
 	m_cameraView->update();
 	m_rules.update(m_board);
 	if (m_rules.hasLost()) {
