@@ -1,6 +1,7 @@
 #include "Game.hpp"
 #include "opengl/PerspectiveCamera.hpp"
 #include "game/cameraView/Rotate.hpp"
+#include "game/cameraView/Fixed.hpp"
 #include "GameOver.hpp"
 #include <iostream>
 
@@ -25,6 +26,11 @@ bool GameScene::onEnter() {
 	std::static_pointer_cast<RotateView>(m_cameraView)->rotateHorizontal(90.0f);
 
 	setCamera(std::shared_ptr<Camera>(new PerspectiveCamera(m_cameraView, 45.0f, 800.0f / 600.0f, 0.1f, 100.0f)));
+
+	std::shared_ptr<CameraView> uiView = std::shared_ptr<CameraView>(new FixedView(glm::vec3(0.0f, 0.0f, -1.0f)));
+	uiView->setPosition(glm::vec3(4.5f, 6.5f, 22.4f));
+	m_cameraUI = std::shared_ptr<Camera>(new PerspectiveCamera(uiView, 45.0f, 800.0f / 600.0f, 0.1f, 100.0f));
+	uiView->update();
 	return true;
 }
 
@@ -49,5 +55,5 @@ void GameScene::update(StateMachine<SceneState> &stateMachine) {
 }
 
 void GameScene::render() {
-	m_board.render(m_camera);
+	m_board.render(m_camera, m_cameraUI);
 }

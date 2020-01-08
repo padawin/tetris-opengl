@@ -62,7 +62,7 @@ class Board : public GameObject {
 	void removeFullLines();
 	void groupBlocks();
 
-	void render(std::shared_ptr<Camera> camera);
+	void render(std::shared_ptr<Camera> camera, std::shared_ptr<Camera> cameraUI);
 };
 
 #endif

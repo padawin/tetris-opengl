@@ -137,7 +137,7 @@ void Board::createPlacedPieces() {
 	m_currentPiece = nullptr;
 }
 
-void Board::render(std::shared_ptr<Camera> camera) {
+void Board::render(std::shared_ptr<Camera> camera, std::shared_ptr<Camera> cameraUI) {
 	m_sideRenderer.setUniform("color", COLOR_SIDE);
 	m_left.render(camera, &m_sideRenderer);
 	m_right.render(camera, &m_sideRenderer);
@@ -145,7 +145,7 @@ void Board::render(std::shared_ptr<Camera> camera) {
 		_renderPiece(camera, m_pieces[i]);
 	}
 	_renderPiece(camera, m_currentPiece);
-	_renderPiece(camera, m_nextPiece);
+	_renderPiece(cameraUI, m_nextPiece);
 }
 
 void Board::_renderPiece(std::shared_ptr<Camera> camera, std::shared_ptr<Piece> piece) {
