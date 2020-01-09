@@ -5,8 +5,10 @@
 const glm::vec3 COLOR_SIDE = glm::vec3(0.64f, 0.64f, 0.64f);
 
 void Board::init() {
-	m_left.setPosition(-1.0f, BOARD_HEIGHT / 2 - 0.5f, 0.0f);
-	m_right.setPosition(BOARD_WIDTH, BOARD_HEIGHT / 2 - 0.5f, 0.0f);
+	m_frontLeft.setPosition(-1.0f, BOARD_HEIGHT / 2 - 0.5f, 0.0f);
+	m_frontRight.setPosition(BOARD_WIDTH, BOARD_HEIGHT / 2 - 0.5f, 0.0f);
+	m_backLeft.setPosition(-1.0f, BOARD_HEIGHT / 2 - 0.5f, BOARD_DEPTH);
+	m_backRight.setPosition(BOARD_WIDTH, BOARD_HEIGHT / 2 - 0.5f, BOARD_DEPTH);
 	renderer_initSideRenderer(&m_sideRenderer, BOARD_HEIGHT);
 	renderer_initPieceRenderer(&m_pieceRenderer);
 	generateNextPiece();
@@ -139,8 +141,10 @@ void Board::createPlacedPieces() {
 
 void Board::render(std::shared_ptr<Camera> camera, std::shared_ptr<Camera> cameraUI) {
 	m_sideRenderer.setUniform("color", COLOR_SIDE);
-	m_left.render(camera, &m_sideRenderer);
-	m_right.render(camera, &m_sideRenderer);
+	m_frontLeft.render(camera, &m_sideRenderer);
+	m_frontRight.render(camera, &m_sideRenderer);
+	m_backLeft.render(camera, &m_sideRenderer);
+	m_backRight.render(camera, &m_sideRenderer);
 	for (int i = 0; i < BOARD_SIZE; ++i) {
 		_renderPiece(camera, m_pieces[i]);
 	}

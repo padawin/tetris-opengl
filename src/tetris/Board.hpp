@@ -8,8 +8,9 @@
 #include "Piece.hpp"
 
 #define BOARD_WIDTH 10
+#define BOARD_DEPTH 10
 #define BOARD_HEIGHT 18
-#define BOARD_SIZE 180
+#define BOARD_SIZE 1800
 
 #define NEXT_PIECE_X BOARD_WIDTH+4
 #define NEXT_PIECE_Y 1
@@ -26,8 +27,10 @@ const unsigned int DIRECTION_RIGHT = 0x08;
 
 class Board : public GameObject {
 	private:
-	GameObject m_left = GameObject();
-	GameObject m_right = GameObject();
+	GameObject m_frontLeft = GameObject();
+	GameObject m_frontRight = GameObject();
+	GameObject m_backLeft = GameObject();
+	GameObject m_backRight = GameObject();
 	ObjectRenderer m_sideRenderer = ObjectRenderer();
 	ObjectRenderer m_pieceRenderer = ObjectRenderer();
 	std::shared_ptr<Piece> m_pieces[BOARD_SIZE];
