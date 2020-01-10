@@ -74,11 +74,11 @@ void ObjectRenderer::setPosition(float x, float y, float z) {
 	m_position = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
 }
 
-void ObjectRenderer::setUniform(std::string name, glm::vec3 value) {
+void ObjectRenderer::setUniform(std::string name, glm::vec4 value) {
 	GLuint shaderProgram = shader_getProgram(m_sShaderProgram.c_str());
 	int location = glGetUniformLocation(shaderProgram, name.c_str());
 	glUseProgram(shaderProgram);
-	glUniform3f(location, value.x, value.y, value.z);
+	glUniform4f(location, value.x, value.y, value.z, value.w);
 }
 
 void ObjectRenderer::render(std::shared_ptr<Camera> camera) {

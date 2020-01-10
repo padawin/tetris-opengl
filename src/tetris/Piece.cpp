@@ -2,7 +2,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
 
-const glm::vec3 COLOR_GHOST = glm::vec3(0.15f, 0.15f, 0.15f);
+const glm::vec4 COLOR_GHOST = glm::vec4(0.35f, 0.35f, 0.35f, 0.6f);
 
 std::vector<glm::ivec2> Piece::getBlocks() const {
 	return m_vBlockCoordinates[m_iOrientation];

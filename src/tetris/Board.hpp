@@ -27,7 +27,7 @@ const unsigned int DIRECTION_RIGHT = 0x08;
 const unsigned int DIRECTION_FRONT = 0x10;
 const unsigned int DIRECTION_BACK = 0x20;
 
-const glm::vec3 COLOR_SIDE = glm::vec3(0.64f, 0.64f, 0.64f);
+const glm::vec4 COLOR_SIDE = glm::vec4(0.64f, 0.64f, 0.64f, 1.0f);
 
 class Board : public GameObject {
 	private:
