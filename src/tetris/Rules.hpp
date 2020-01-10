@@ -1,8 +1,8 @@
 #ifndef __RULES__
 #define __RULES__
 
-#include "game/UserActions.hpp"
 #include "Board.hpp"
+#include <memory>
 
 enum BoardState {
 	GENERATE_PIECE,
@@ -24,21 +24,23 @@ class Rules {
 	int m_iLevel = 0;
 	int m_iTotalLinesRemoved = 0;
 
-	void _setTurbo(bool turbo);
-	void _rotatePiece(bool rotatePressed, Board &board);
 	void _addPoints(int linesRemovedCount);
 	void _levelUp(int linesRemovedCount);
 
 	double _getTimeBetweenActions() const;
 
-	void _generatePiece(Board &board);
-	void _pieceFall(Board &board);
-	void _removeFullLines(Board &board);
-	void _movePieceDown(Board &board);
+	void _generatePiece(std::shared_ptr<Board> board);
+	void _pieceFall(std::shared_ptr<Board> board);
+	void _removeFullLines(std::shared_ptr<Board> board);
+	void _movePieceDown(std::shared_ptr<Board> board);
 
 	public:
-	void handleUserEvents(UserActions &userActions, Board &board);
-	void update(Board &board);
+	void update(std::shared_ptr<Board> board);
+	void rotatePiece(bool rotatePressed, std::shared_ptr<Board> board);
+
+	bool playerCanMovePiece() const;
+	void setPlayerMovedPiece();
+	void setTurbo(bool turbo);
 
 	bool hasLost() const;
 };

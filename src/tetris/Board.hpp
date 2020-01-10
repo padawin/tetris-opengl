@@ -24,15 +24,13 @@ const unsigned int DIRECTION_DOWN = 0x01;
 const unsigned int DIRECTION_UP = 0x02;
 const unsigned int DIRECTION_LEFT = 0x04;
 const unsigned int DIRECTION_RIGHT = 0x08;
+const unsigned int DIRECTION_FRONT = 0x10;
+const unsigned int DIRECTION_BACK = 0x20;
+
+const glm::vec3 COLOR_SIDE = glm::vec3(0.64f, 0.64f, 0.64f);
 
 class Board : public GameObject {
 	private:
-	GameObject m_frontLeft = GameObject();
-	GameObject m_frontRight = GameObject();
-	GameObject m_backLeft = GameObject();
-	GameObject m_backRight = GameObject();
-	ObjectRenderer m_sideRenderer = ObjectRenderer();
-	ObjectRenderer m_pieceRenderer = ObjectRenderer();
 	std::shared_ptr<Piece> m_pieces[BOARD_SIZE];
 	std::shared_ptr<Piece> m_currentPiece = nullptr;
 	std::shared_ptr<Piece> m_nextPiece = nullptr;
@@ -50,8 +48,14 @@ class Board : public GameObject {
 
 	void _renderPiece(std::shared_ptr<Camera> camera, std::shared_ptr<Piece> piece);
 
+	protected:
+	ObjectRenderer m_sideRenderer = ObjectRenderer();
+	ObjectRenderer m_pieceRenderer = ObjectRenderer();
+	virtual void _init();
+	virtual void _render(std::shared_ptr<Camera> camera, std::shared_ptr<Camera> cameraUI);
+
 	public:
-	void init();
+	virtual ~Board() {}
 	int getCurrentPieceCellIndex() const;
 	bool collides(int cellIndex, CollisionType type, unsigned int directions) const;
 	void movePieceSide(unsigned int direction);
@@ -65,7 +69,8 @@ class Board : public GameObject {
 	void removeFullLines();
 	void groupBlocks();
 
-	void render(std::shared_ptr<Camera> camera, std::shared_ptr<Camera> cameraUI);
+	virtual void init() = 0;
+	virtual void render(std::shared_ptr<Camera> camera, std::shared_ptr<Camera> cameraUI) = 0;
 };
 
 #endif

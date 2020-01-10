@@ -10,41 +10,31 @@ const float BASE_TIME_BETWEEN_ACTIONS = 0.75f; // seconds
 const float TIME_REDUCTION_PER_LEVEL = 0.1f; // percent
 const float TURBO_TIME_COEF = 9.0f; // coef
 
-void Rules::handleUserEvents(UserActions &userActions, Board &board) {
-	_setTurbo(m_state == PIECE_FALLS && userActions.getActionState("TURBO"));
-	_rotatePiece(userActions.getActionState("ROTATE"), board);
-
-	if (glfwGetTime() - m_fLastPieceSideMove < TIME_BETWEEN_PIECE_SIDE_MOVE) {
-		return;
-	}
-
-	if (userActions.getActionState("LEFT")) {
-		board.movePieceSide(DIRECTION_LEFT);
-		m_fLastPieceSideMove = glfwGetTime();
-	}
-	else if (userActions.getActionState("RIGHT")) {
-		board.movePieceSide(DIRECTION_RIGHT);
-		m_fLastPieceSideMove = glfwGetTime();
-	}
+bool Rules::playerCanMovePiece() const {
+	return glfwGetTime() - m_fLastPieceSideMove > TIME_BETWEEN_PIECE_SIDE_MOVE;
 }
 
-void Rules::_setTurbo(bool turbo) {
-	m_bTurbo = turbo;
+void Rules::setPlayerMovedPiece() {
+	m_fLastPieceSideMove = glfwGetTime();
 }
 
-void Rules::_rotatePiece(bool rotatePressed, Board &board) {
+void Rules::setTurbo(bool turbo) {
+	m_bTurbo = m_state == PIECE_FALLS && turbo;
+}
+
+void Rules::rotatePiece(bool rotatePressed, std::shared_ptr<Board> board) {
 	if (!rotatePressed) {
 		m_bRotatedPressed = false;
 		return;
 	}
 
 	if (!m_bRotatedPressed) {
-		board.rotatePiece();
+		board->rotatePiece();
 		m_bRotatedPressed = true;
 	}
 }
 
-void Rules::update(Board &board) {
+void Rules::update(std::shared_ptr<Board> board) {
 	if (glfwGetTime() - m_fLastActionTime >= _getTimeBetweenActions()) {
 		if (m_state == GENERATE_PIECE) {
 			_generatePiece(board);
@@ -77,10 +67,10 @@ double Rules::_getTimeBetweenActions() const {
 	return t;
 }
 
-void Rules::_generatePiece(Board &board) {
-	board.setCurrentPiece();
-	board.generateNextPiece();
-	if (board.collides(board.getCurrentPieceCellIndex(), OVERLAPS, DIRECTION_DOWN)) {
+void Rules::_generatePiece(std::shared_ptr<Board> board) {
+	board->setCurrentPiece();
+	board->generateNextPiece();
+	if (board->collides(board->getCurrentPieceCellIndex(), OVERLAPS, DIRECTION_DOWN)) {
 		m_state = LOST;
 	}
 	else {
@@ -88,10 +78,10 @@ void Rules::_generatePiece(Board &board) {
 	}
 }
 
-void Rules::_pieceFall(Board &board) {
-	if (board.collides(board.getCurrentPieceCellIndex(), TOUCHES, DIRECTION_DOWN)) {
-		board.createPlacedPieces();
-		int fullLinesCount = board.countFullLines();
+void Rules::_pieceFall(std::shared_ptr<Board> board) {
+	if (board->collides(board->getCurrentPieceCellIndex(), TOUCHES, DIRECTION_DOWN)) {
+		board->createPlacedPieces();
+		int fullLinesCount = board->countFullLines();
 		if (fullLinesCount > 0) {
 			m_state = REMOVE_FULL_LINES;
 		}
@@ -100,14 +90,14 @@ void Rules::_pieceFall(Board &board) {
 		}
 	}
 	else {
-		board.movePieceDown();
+		board->movePieceDown();
 	}
 }
 
-void Rules::_removeFullLines(Board &board) {
-	int fullLinesCount = board.countFullLines();
+void Rules::_removeFullLines(std::shared_ptr<Board> board) {
+	int fullLinesCount = board->countFullLines();
 	if (fullLinesCount > 0) {
-		board.removeFullLines();
+		board->removeFullLines();
 		_addPoints(fullLinesCount);
 		_levelUp(fullLinesCount);
 		m_state = MOVE_PIECES_DOWN;
@@ -117,8 +107,8 @@ void Rules::_removeFullLines(Board &board) {
 	}
 }
 
-void Rules::_movePieceDown(Board &board) {
-	board.groupBlocks();
+void Rules::_movePieceDown(std::shared_ptr<Board> board) {
+	board->groupBlocks();
 	m_state = GENERATE_PIECE;
 }
 

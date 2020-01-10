@@ -16,13 +16,16 @@
 #include "opengl/shader.hpp"
 #include "opengl/texture.hpp"
 
-#include "tetris/scene/Game.hpp"
+#include "tetris/scene/2DGame.hpp"
+#include "tetris/scene/3DGame.hpp"
 
 const char* WINDOW_TITLE = "Learn OpenGL";
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 
 bool _setBinaryPath(int argc, char* args[]);
+
+enum GameMode {MODE_2D, MODE_3D};
 
 int main(int argc, char* args[]) {
 	setlocale(LC_ALL,"");
@@ -44,13 +47,32 @@ int main(int argc, char* args[]) {
 		return actionsSet;
 	}
 
+	GameMode mode = MODE_2D;
+	if (argc > 1) {
+		if (args[1][0] == '2') {
+			mode = MODE_2D;
+		}
+		else if (args[1][0] == '3') {
+			mode = MODE_3D;
+		}
+		else {
+			std::cerr << "Invalid mode: " << args[1] << std::endl;
+			return 1;
+		}
+	}
+
 	StateMachine<SceneState> stateMachine = StateMachine<SceneState>();
 	Game g(stateMachine, renderer, inputHandler);
 	if (g.init()
 		&& shader_loadPrograms()
 		&& texture_loadAll()
 	) {
-		stateMachine.pushState(new GameScene(userActions));
+		if (mode == MODE_2D) {
+			stateMachine.pushState(new Game2DScene(userActions));
+		}
+		else {
+			stateMachine.pushState(new Game3DScene(userActions));
+		}
 		g.mainLoop();
 	}
 

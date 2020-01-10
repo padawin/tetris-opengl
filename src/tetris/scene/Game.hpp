@@ -9,15 +9,19 @@
 class GameScene : public SceneState {
 	private:
 	Rules m_rules;
-	Board m_board;
-	std::shared_ptr<Camera> m_cameraUI = nullptr;
+
+	protected:
+	std::shared_ptr<Board> m_board;
+	virtual void _initCamera() = 0;
+	virtual void _handleEvents();
+	virtual unsigned int _getLeft() = 0;
+	virtual unsigned int _getRight() = 0;
 
 	public:
-	GameScene(UserActions &userActions);
+	GameScene(UserActions &userActions, std::shared_ptr<Board> board);
 	bool onEnter();
 	void update(StateMachine<SceneState> &stateMachine);
-	void render();
-	std::string getStateID() const;
+	virtual void render() = 0;
 };
 
 #endif

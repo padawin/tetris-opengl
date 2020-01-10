@@ -1,37 +1,25 @@
 #include "Game.hpp"
+#include "tetris/2DBoard.hpp"
+#include "tetris/3DBoard.hpp"
 #include "opengl/PerspectiveCamera.hpp"
 #include "game/cameraView/Rotate.hpp"
 #include "game/cameraView/Fixed.hpp"
 #include "GameOver.hpp"
 #include <iostream>
 
-std::string GameScene::getStateID() const {
-	return "GameScene";
-}
-
-GameScene::GameScene(UserActions &userActions) :
+GameScene::GameScene(UserActions &userActions, std::shared_ptr<Board> board) :
 	SceneState(userActions),
 	m_rules(Rules()),
-	m_board(Board())
+	m_board(board)
 {
 }
 
 bool GameScene::onEnter() {
-	m_board.init();
-	glm::vec3 boardPosition = m_board.getPosition();
-	boardPosition.x += BOARD_WIDTH / 2;
-	boardPosition.y += BOARD_HEIGHT / 2;
-	boardPosition.z -= BOARD_WIDTH / 2;
-	setCameraView(std::shared_ptr<CameraView>(new RotateView(boardPosition, 30.0f)));
-	std::static_pointer_cast<RotateView>(m_cameraView)->rotateVertical(25.0f);
-	std::static_pointer_cast<RotateView>(m_cameraView)->rotateHorizontal(90.0f);
-
+	m_board->init();
+	_initCamera();
+	m_cameraView->update();
 	setCamera(std::shared_ptr<Camera>(new PerspectiveCamera(m_cameraView, 45.0f, 800.0f / 600.0f, 0.1f, 100.0f)));
 
-	std::shared_ptr<CameraView> uiView = std::shared_ptr<CameraView>(new FixedView(glm::vec3(0.0f, 0.0f, -1.0f)));
-	uiView->setPosition(glm::vec3(4.5f, 6.5f, 22.4f));
-	m_cameraUI = std::shared_ptr<Camera>(new PerspectiveCamera(uiView, 45.0f, 800.0f / 600.0f, 0.1f, 100.0f));
-	uiView->update();
 	return true;
 }
 
@@ -41,20 +29,26 @@ void GameScene::update(StateMachine<SceneState> &stateMachine) {
 		stateMachine.clean();
 		return;
 	}
-	m_rules.handleUserEvents(m_userActions, m_board);
-	if (m_userActions.getActionState("CAMERA_LEFT")) {
-		std::static_pointer_cast<RotateView>(m_cameraView)->rotateHorizontal(1.1f);
-	}
-	else if (m_userActions.getActionState("CAMERA_RIGHT")) {
-		std::static_pointer_cast<RotateView>(m_cameraView)->rotateHorizontal(-1.1f);
-	}
-	m_cameraView->update();
+
+	_handleEvents();
 	m_rules.update(m_board);
 	if (m_rules.hasLost()) {
 		stateMachine.changeState(new GameOverScene(m_userActions));
 	}
 }
 
-void GameScene::render() {
-	m_board.render(m_camera, m_cameraUI);
+void GameScene::_handleEvents() {
+	m_rules.setTurbo(m_userActions.getActionState("TURBO"));
+	m_rules.rotatePiece(m_userActions.getActionState("ROTATE"), m_board);
+
+	if (m_rules.playerCanMovePiece()) {
+		if (m_userActions.getActionState("LEFT")) {
+			m_board->movePieceSide(_getLeft());
+			m_rules.setPlayerMovedPiece();
+		}
+		else if (m_userActions.getActionState("RIGHT")) {
+			m_board->movePieceSide(_getRight());
+			m_rules.setPlayerMovedPiece();
+		}
+	}
 }
