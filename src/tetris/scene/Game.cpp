@@ -1,6 +1,4 @@
 #include "Game.hpp"
-#include "tetris/2DBoard.hpp"
-#include "tetris/3DBoard.hpp"
 #include "opengl/PerspectiveCamera.hpp"
 #include "game/cameraView/Rotate.hpp"
 #include "game/cameraView/Fixed.hpp"

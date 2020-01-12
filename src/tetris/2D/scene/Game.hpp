@@ -1,7 +1,7 @@
 #ifndef __2D_GAME_SCENE__
 #define __2D_GAME_SCENE__
 
-#include "Game.hpp"
+#include "tetris/scene/Game.hpp"
 
 class Game2DScene : public GameScene {
 	protected:

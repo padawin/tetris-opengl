@@ -33,15 +33,29 @@ IFLAGS = -I$(LIBDIR)/glad/include -I$(LIBDIR)/stb_image -Isrc
 CFLAGS += $(IFLAGS)
 LIBS = -lGL -lGLU -lglfw -ldl
 
-DEP := $(shell find $(SRCDIR)/ $(LIBDIR)/ -type f -name '*.hpp' -o -name '*.h')
+DEP2D := $(shell find $(SRCDIR)/ $(LIBDIR)/ -type f -name '*.hpp' -o -name '*.h' | grep -v 3D)
+SRC2D := $(shell find $(SRCDIR)/ -type f -name '*.cpp' -o -name '*.c' | grep -v 3D)
+OBJ2D = $(patsubst %.cpp,$(BUILDDIR)/%.o,$(SRC2D))
 
-SRC := $(shell find $(SRCDIR)/ -type f -name '*.cpp' -o -name '*.c')
-OBJ = $(patsubst %.cpp,$(BUILDDIR)/%.o,$(SRC))
+DEP3D := $(shell find $(SRCDIR)/ $(LIBDIR)/ -type f -name '*.hpp' -o -name '*.h' | grep -v 2D)
+SRC3D := $(shell find $(SRCDIR)/ -type f -name '*.cpp' -o -name '*.c' | grep -v 2D)
+OBJ3D = $(patsubst %.cpp,$(BUILDDIR)/%.o,$(SRC3D))
 
 # Local libs can be either *.c or *.cpp files. The object files will be: *.c.o
 # or *.cpp.o
 LIBSRC := $(shell find $(LIBDIR)/ -type f -name '*.cpp' -o -name '*.c')
 LIBOBJ = $(patsubst %,$(BUILDDIR)/%.o,$(LIBSRC))
+
+ifeq ($(3D), 1)
+	CFLAGS += -DMODE_3D
+	DEP := $(DEP3D)
+	SRC := $(SRC3D)
+	OBJ := $(OBJ3D)
+else
+	DEP := $(DEP2D)
+	SRC := $(SRC2D)
+	OBJ := $(OBJ2D)
+endif
 
 all: prepare $(PROG)
 

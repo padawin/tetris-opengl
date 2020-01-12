@@ -1,5 +1,5 @@
-#include "3DBoard.hpp"
-#include "renderers.hpp"
+#include "Board.hpp"
+#include "tetris/renderers.hpp"
 
 void Board3D::init() {
 	m_frontLeft.setPosition(-1.0f, BOARD_HEIGHT / 2 - 0.5f, 0.0f);

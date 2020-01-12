@@ -1,9 +1,9 @@
-#include "2DGame.hpp"
-#include "tetris/2DBoard.hpp"
+#include "./Game.hpp"
+#include "tetris/2D/Board.hpp"
+#include "tetris/scene/GameOver.hpp"
 #include "opengl/PerspectiveCamera.hpp"
 #include "game/cameraView/Rotate.hpp"
 #include "game/cameraView/Fixed.hpp"
-#include "GameOver.hpp"
 #include <iostream>
 
 std::string Game2DScene::getStateID() const {

@@ -1,7 +1,7 @@
 #ifndef __2DBOARD__
 #define __2DBOARD__
 
-#include "Board.hpp"
+#include "tetris/Board.hpp"
 
 class Board2D : public Board {
 	private:

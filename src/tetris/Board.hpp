@@ -8,9 +8,14 @@
 #include "Piece.hpp"
 
 #define BOARD_WIDTH 10
-#define BOARD_DEPTH 10
 #define BOARD_HEIGHT 18
+#ifndef MODE_3D
+#define BOARD_DEPTH 1
+#define BOARD_SIZE 180
+#else
+#define BOARD_DEPTH 10
 #define BOARD_SIZE 1800
+#endif
 
 #define NEXT_PIECE_X BOARD_WIDTH+4
 #define NEXT_PIECE_Y 1

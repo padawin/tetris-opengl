@@ -1,5 +1,5 @@
-#include "2DBoard.hpp"
-#include "renderers.hpp"
+#include "./Board.hpp"
+#include "tetris/renderers.hpp"
 
 void Board2D::init() {
 	m_left.setPosition(-1.0f, BOARD_HEIGHT / 2 - 0.5f, 0.0f);
