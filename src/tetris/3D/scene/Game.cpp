@@ -19,7 +19,7 @@ void Game3DScene::_initCamera() {
 	glm::vec3 boardPosition = m_board->getPosition();
 	boardPosition.x += BOARD_WIDTH / 2;
 	boardPosition.y += BOARD_HEIGHT / 2;
-	boardPosition.z -= BOARD_WIDTH / 2;
+	boardPosition.z = BOARD_DEPTH / 2;
 	setCameraView(std::shared_ptr<CameraView>(new RotateView(boardPosition, 30.0f)));
 	std::static_pointer_cast<RotateView>(m_cameraView)->rotateVertical(25.0f);
 	std::static_pointer_cast<RotateView>(m_cameraView)->rotateHorizontal(90.0f);

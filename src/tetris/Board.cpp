@@ -7,7 +7,7 @@ void Board::_init() {
 
 void Board::generateNextPiece() {
 	m_nextPiece = std::shared_ptr<Piece>(PieceFactory::create());
-	m_nextPiece->setPosition(NEXT_PIECE_X, NEXT_PIECE_Y, 0.1f);
+	m_nextPiece->setPosition(NEXT_PIECE_X, NEXT_PIECE_Y, NEXT_PIECE_Z);
 }
 
 void Board::movePieceSide(unsigned int direction) {
@@ -19,12 +19,25 @@ void Board::movePieceSide(unsigned int direction) {
 		return;
 	}
 
-	_moveCurrentPiece(direction == DIRECTION_LEFT ? -1 : 1);
+	int distance = 0;
+	if (direction == DIRECTION_LEFT) {
+		distance = -1;
+	}
+	else if (direction == DIRECTION_RIGHT) {
+		distance = 1;
+	}
+	else if (direction == DIRECTION_BACK) {
+		distance = -BOARD_DEPTH;
+	}
+	else if (direction == DIRECTION_FRONT) {
+		distance = BOARD_DEPTH;
+	}
+	_moveCurrentPiece(distance);
 	_updateGhost();
 }
 
 void Board::movePieceDown() {
-	_moveCurrentPiece(-BOARD_WIDTH);
+	_moveCurrentPiece(-BOARD_WIDTH * BOARD_DEPTH);
 }
 
 void Board::setCurrentPiece() {
@@ -34,7 +47,7 @@ void Board::setCurrentPiece() {
 	int maxDistanceFromTop = _getCurrentPieceTopOverlap();
 
 	// Move the piece down so that it in not out of the board
-	_moveCurrentPiece(-maxDistanceFromTop * BOARD_WIDTH);
+	_moveCurrentPiece(-maxDistanceFromTop * BOARD_WIDTH * BOARD_DEPTH);
 	_updateGhost();
 }
 
@@ -57,19 +70,19 @@ void Board::_moveCurrentPiece(int cellDelta) {
 	m_currentPiece->setPosition(
 		_getWorldX(m_currentPieceCell),
 		_getWorldY(m_currentPieceCell),
-		0.1f
+		_getWorldZ(m_currentPieceCell)
 	);
 }
 
 void Board::_updateGhost() {
 	int ghostIndex = m_currentPieceCell;
 	while (!collides(ghostIndex, TOUCHES, DIRECTION_DOWN)) {
-		ghostIndex -= BOARD_WIDTH;
+		ghostIndex -= BOARD_WIDTH*BOARD_DEPTH;
 	}
 	m_currentPiece->getGhost()->setPosition(
 		_getWorldX(ghostIndex),
 		_getWorldY(ghostIndex),
-		-0.1f
+		_getWorldZ(ghostIndex)
 	);
 }
 
@@ -78,7 +91,11 @@ int Board::_getGridX(int cellIndex) const {
 }
 
 int Board::_getGridY(int cellIndex) const {
-	return cellIndex / BOARD_WIDTH;
+	return cellIndex / (BOARD_WIDTH * BOARD_DEPTH);
+}
+
+int Board::_getGridZ(int cellIndex) const {
+	return (cellIndex / BOARD_WIDTH) % BOARD_DEPTH;
 }
 
 float Board::_getWorldX(int cellIndex) const {
@@ -89,19 +106,28 @@ float Board::_getWorldY(int cellIndex) const {
 	return m_position.y + (float) _getGridY(cellIndex) * CELL_HEIGHT;
 }
 
+float Board::_getWorldZ(int cellIndex) const {
+	return m_position.z + (float) _getGridZ(cellIndex) * CELL_DEPTH;
+}
+
 bool Board::collides(int cellIndex, CollisionType type, unsigned int directions) const {
 	int currentPieceX = _getGridX(cellIndex);
 	int currentPieceY = _getGridY(cellIndex);
+	int currentPieceZ = _getGridZ(cellIndex);
 	int isDown = directions & DIRECTION_DOWN;
 	int isUp = directions & DIRECTION_UP;
 	int isLeft = directions & DIRECTION_LEFT;
 	int isRight = directions & DIRECTION_RIGHT;
+	int isBack = directions & DIRECTION_BACK;
+	int isFront = directions & DIRECTION_FRONT;
 	int distance = type == TOUCHES ? 1 : 0;
 	for (auto block : m_currentPiece->getBlocks()) {
-		if ((isDown && !_isValid(currentPieceX + block.x, currentPieceY + block.y - distance))
-			|| (isUp && !_isValid(currentPieceX + block.x, currentPieceY + block.y + distance))
-			|| (isLeft && !_isValid(currentPieceX + block.x - distance, currentPieceY + block.y))
-			|| (isRight && !_isValid(currentPieceX + block.x + distance, currentPieceY + block.y))
+		if ((isLeft && !_isValid(currentPieceX + block.x - distance, currentPieceY + block.y, currentPieceZ + block.z))
+			|| (isRight && !_isValid(currentPieceX + block.x + distance, currentPieceY + block.y, currentPieceZ + block.z))
+			|| (isDown && !_isValid(currentPieceX + block.x, currentPieceY + block.y - distance, currentPieceZ + block.z))
+			|| (isUp && !_isValid(currentPieceX + block.x, currentPieceY + block.y + distance, currentPieceZ + block.z))
+			|| (isBack && !_isValid(currentPieceX + block.x, currentPieceY + block.y, currentPieceZ + block.z - distance))
+			|| (isFront && !_isValid(currentPieceX + block.x, currentPieceY + block.y, currentPieceZ + block.z + distance))
 		) {
 			return true;
 		}
@@ -109,25 +135,29 @@ bool Board::collides(int cellIndex, CollisionType type, unsigned int directions)
 	return false;
 }
 
-bool Board::_isValid(int x, int y) const {
-	if (x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT) {
+bool Board::_isValid(int x, int y, int z) const {
+	if (x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT || z < 0 || z >= BOARD_DEPTH) {
 	   return false;
 	}
-	int cellIndex = y * BOARD_WIDTH + x;
+	int cellIndex = _getCellIndex(x, y, z);
 	return m_pieces[cellIndex] == nullptr;
 }
 
 void Board::createPlacedPieces() {
 	for (auto block : m_currentPiece->getBlocks()) {
-		int pieceCell = m_currentPieceCell + block.x + block.y * BOARD_WIDTH;
+		int pieceCell = m_currentPieceCell + _getCellIndex(block.x, block.y, block.z);
 		m_pieces[pieceCell] = std::shared_ptr<Piece>(PieceFactory::createPlaced());
 		m_pieces[pieceCell]->setPosition(
 			_getWorldX(pieceCell),
 			_getWorldY(pieceCell),
-			0.1f
+			_getWorldZ(pieceCell)
 		);
 	}
 	m_currentPiece = nullptr;
+}
+
+int Board::_getCellIndex(int x, int y, int z) const {
+	return z * BOARD_WIDTH + y * BOARD_WIDTH * BOARD_DEPTH + x;
 }
 
 void Board::_render(std::shared_ptr<Camera> camera, std::shared_ptr<Camera> cameraUI) {
@@ -217,7 +247,7 @@ void Board::groupBlocks() {
 					m_pieces[newCellIndex]->setPosition(
 						_getWorldX(newCellIndex),
 						_getWorldY(newCellIndex),
-						0.1f
+						_getWorldZ(newCellIndex)
 					);
 					m_pieces[newCellIndex]->update();
 				}

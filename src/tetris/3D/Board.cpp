@@ -2,10 +2,10 @@
 #include "tetris/renderers.hpp"
 
 void Board3D::init() {
-	m_frontLeft.setPosition(-1.0f, BOARD_HEIGHT / 2 - 0.5f, 0.0f);
-	m_frontRight.setPosition(BOARD_WIDTH, BOARD_HEIGHT / 2 - 0.5f, 0.0f);
-	m_backLeft.setPosition(-1.0f, BOARD_HEIGHT / 2 - 0.5f, -BOARD_DEPTH);
-	m_backRight.setPosition(BOARD_WIDTH, BOARD_HEIGHT / 2 - 0.5f, -BOARD_DEPTH);
+	m_frontLeft.setPosition(-1.0f, BOARD_HEIGHT / 2 - 0.5f, -1.0f);
+	m_frontRight.setPosition(BOARD_WIDTH, BOARD_HEIGHT / 2 - 0.5f, -1.0f);
+	m_backLeft.setPosition(-1.0f, BOARD_HEIGHT / 2 - 0.5f, BOARD_DEPTH);
+	m_backRight.setPosition(BOARD_WIDTH, BOARD_HEIGHT / 2 - 0.5f, BOARD_DEPTH);
 	renderer_init3DSideRenderer(&m_sideRenderer, BOARD_HEIGHT);
 	renderer_init3DPieceRenderer(&m_pieceRenderer);
 	_init();

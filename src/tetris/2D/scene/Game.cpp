@@ -17,7 +17,7 @@ Game2DScene::Game2DScene(UserActions &userActions) :
 
 void Game2DScene::_initCamera() {
 	setCameraView(std::shared_ptr<CameraView>(new FixedView(glm::vec3(0.0f, 0.0f, -1.0f))));
-	m_cameraView->setPosition(glm::vec3(4.5f, 8.5f, 22.4f));
+	m_cameraView->setPosition(glm::vec3(4.5f, 8.5f, 23.4f));
 	m_cameraView->update();
 }
 

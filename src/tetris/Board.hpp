@@ -19,9 +19,11 @@
 
 #define NEXT_PIECE_X BOARD_WIDTH+4
 #define NEXT_PIECE_Y 1
+#define NEXT_PIECE_Z BOARD_DEPTH+4
 
 #define CELL_WIDTH 1
 #define CELL_HEIGHT 1
+#define CELL_DEPTH 1
 
 enum CollisionType {TOUCHES, OVERLAPS};
 
@@ -43,12 +45,15 @@ class Board : public GameObject {
 	int m_currentPieceCell = 0;
 
 	int _getCurrentPieceTopOverlap() const;
+	int _getCellIndex(int x, int y, int z) const;
 	void _moveCurrentPiece(int cellDelta);
-	bool _isValid(int x, int y) const;
+	bool _isValid(int x, int y, int z) const;
 	int _getGridX(int cellIndex) const;
 	int _getGridY(int cellIndex) const;
+	int _getGridZ(int cellIndex) const;
 	float _getWorldX(int cellIndex) const;
 	float _getWorldY(int cellIndex) const;
+	float _getWorldZ(int cellIndex) const;
 	void _updateGhost();
 
 	void _renderPiece(std::shared_ptr<Camera> camera, std::shared_ptr<Piece> piece);

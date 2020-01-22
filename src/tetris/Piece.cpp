@@ -4,8 +4,21 @@
 
 const glm::vec4 COLOR_GHOST = glm::vec4(0.35f, 0.35f, 0.35f, 0.6f);
 
-std::vector<glm::ivec2> Piece::getBlocks() const {
-	return m_vBlockCoordinates[m_iOrientation];
+std::vector<glm::ivec3> Piece::getBlocks() const {
+	std::vector<glm::ivec3> blocks = {};
+	for (auto block : m_vBlockCoordinates[m_iOrientation]) {
+		blocks.push_back(glm::ivec3(
+			block.x,
+#ifdef MODE_3D
+			block.z,
+			block.y
+#else
+			block.y,
+			block.z
+#endif
+		));
+	}
+	return blocks;
 }
 
 void Piece::rotate(int quarter) {
@@ -33,8 +46,13 @@ void Piece::_render(std::shared_ptr<Camera> camera, ObjectRenderer *renderer, gl
 	for (auto block : m_vBlockCoordinates[m_iOrientation]) {
 		glm::vec3 positionBlock = glm::vec3(
 			position.x + (float) block.x,
+#ifdef MODE_3D
+			position.y + (float) block.z,
+			position.z + (float) block.y
+#else
 			position.y + (float) block.y,
-			position.z
+			position.z + (float) block.z
+#endif
 		);
 		GameObject::render(camera, renderer, positionBlock, m_angle, m_scale);
 	}
